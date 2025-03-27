@@ -17,7 +17,7 @@
   let error = ""
 
   let tab = 0;
-  let tabs = [t('home.nav.portal'), t('home.nav.link-card'), t('home.nav.game-setup')]
+  let tabs = [t('home.nav.portal')]
 
   USER.me().then((m) => me = m).catch(e => error = e.message)
 </script>
@@ -37,39 +37,7 @@
 
   {#if tab === 0}
     <div out:fade={FADE_OUT} in:fade={FADE_IN} class="action-cards">
-      <ActionCard color="255, 192, 203" icon="solar:card-bold-duotone" on:click={() => tab = 1}>
-        {#if me && me.cards.length > 1}
-          <h3>{t('home.manage-cards')}</h3>
-          <span>{t('home.manage-cards-description')}</span>
-        {:else if me}
-          <h3>{t('home.link-card')}</h3>
-          <span>{t('home.link-cards-description')}</span>
-        {/if}
-      </ActionCard>
-
-      <ActionCard color="82, 93, 233" icon="fluent:chat-12-filled" on:click={() => tab = 3}>
-        <h3>{t('home.join-community')}</h3>
-        <span>{t('home.join-community-description')}</span>
-      </ActionCard>
-
-      <ActionCard on:click={() => tab = 2} icon="uil:link-alt">
-        <h3>{t('home.setup')}</h3>
-        <span>{t('home.setup-description')}</span>
-      </ActionCard>
-
       <ImportDataAction/>
-    </div>
-  {:else if tab === 1}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN}>
-      <LinkCard/>
-    </div>
-  {:else if tab === 2}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN}>
-      <SetupInstructions/>
-    </div>
-  {:else if tab === 3}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN}>
-      <Communities/>
     </div>
   {/if}
 </main>

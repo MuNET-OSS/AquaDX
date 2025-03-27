@@ -19,7 +19,7 @@ import { AQUA_HOST, DEFAULT_PFP } from "./config"
 import type { AquaNetUser } from "./generalTypes"
 
 export function title(t: string) {
-  document.title = `AquaNet - ${t}`
+  document.title = `Minato.network - ${t}`
 }
 
 export function registerChart() {

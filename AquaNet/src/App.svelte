@@ -11,7 +11,6 @@
   import { pfp, tooltip } from "./libs/ui"
   import { ANNOUNCEMENT } from "./libs/config";
   import { t } from "./libs/i18n";
-  import Transfer from "./pages/Transfer/Transfer.svelte";
 
   console.log(`%c
 ┏━┓         ┳━┓━┓┏━
@@ -45,8 +44,7 @@
 <nav>
   {#if path !== "/"}
     <a class="logo" href={USER.isLoggedIn() ? "/home" : "/"}>
-      <img src="/assets/icons/android-chrome-192x192.png" alt="AquaDX"/>
-      <span>AquaNet</span>
+      <span>Minato.network</span>
     </a>
   {/if}
   {#if ANNOUNCEMENT}
@@ -77,7 +75,6 @@
   <Route path="/u/:username/:game" component={UserHome} />
   <Route path="/settings" component={Settings} />
   <Route path="/pictures" component={MaiPhoto} />
-  <Route path="/transfer" component={Transfer} />
 </Router>
 
 <style lang="sass">
@@ -126,8 +123,8 @@
       align-items: center
       gap: 8px
       font-weight: bold
-      color: vars.$c-main
-      letter-spacing: 0.2em
+      color: #e3e3e3
+      letter-spacing: 0.05em
       flex: 1
 
       @media (max-width: vars.$w-mobile)

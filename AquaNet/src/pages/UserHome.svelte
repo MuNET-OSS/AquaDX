@@ -149,7 +149,6 @@
               {/if}
               (@{d.user.aquaUser.username})
             </div>
-            <div class="country">{countryCodeToEmoji(d.user.aquaUser?.country)}</div>
           {:else}
             <h2>{d.user.name}</h2>
           {/if}
