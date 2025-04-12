@@ -129,6 +129,9 @@ const zhHome: typeof EN_REF_HOME = {
   'home.setup.ask': "如果您有任何问题，请加入我们的",
   'home.setup.support': "以获取支持",
   'home.setup.keychip-tips': "这是你的狗号，不要与任何人分享",
+  'home.community.discord': 'Discord',
+  'home.community.telegram': 'Telegram (中文)',
+  'home.community.qq': 'QQ (中文)',
   'home.import.unknown-game': '未知游戏类型 (目前导入只支持舞萌和中二)',
   'home.import.new-data': '要导入的数据',
   'home.import.data-conflict': '继续导入将覆盖现有数据',
@@ -184,6 +187,7 @@ const zhSettings: typeof EN_REF_SETTINGS = {
   'settings.profile.location': '位置',
   'settings.profile.bio': '简介',
   'settings.profile.unset': '未设置',
+  'settings.profile.logout': '登出',
   'settings.profile.unchanged': '未更改',
   'settings.export': '导出玩家数据',
   'settings.cabNotice': '注意：下面这些设置只会影响你自己的机器，如果你是在其他人的机器上玩的话，请联系机主来改设置',
@@ -273,6 +277,7 @@ export const zhAquaTrans: typeof EN_REF_AQUATRANS = {
   'trans.btn.test': '测试连接',
   'trans.btn.export': '导出数据',
   'trans.btn.import': '导入数据',
+  'trans.blacklist': "这个服务器的服主把这个导出工具 ban 了，所以不能从这里导出",
 }
 
 

@@ -122,6 +122,9 @@ export const EN_REF_HOME = {
   'home.setup.ask': 'If you have any questions, please ask in our',
   'home.setup.support': 'server',
   'home.setup.keychip-tips': 'This is your unique keychip, do not share it with anyone',
+  'home.community.discord': 'Discord',
+  'home.community.telegram': 'Telegram (Chinese)',
+  'home.community.qq': 'QQ (Chinese)',
   'home.import.unknown-game': 'Unknown game type. Currently only maimai and chunithm are supported for importing.',
   'home.import.new-data': 'Data to import',
   'home.import.data-conflict': 'Proceed will override your current data',
@@ -177,6 +180,7 @@ export const EN_REF_SETTINGS = {
   'settings.profile.location': 'Location',
   'settings.profile.bio': 'Bio',
   'settings.profile.unset': 'Unset',
+  'settings.profile.logout': 'Log out',
   'settings.profile.unchanged': 'Unchanged',
   'settings.export': 'Export Player Data',
   'settings.cabNotice': "Note: These settings will only affect your own cab/setup. If you're playing on someone else's setup, please contact them to change these settings.",
@@ -266,6 +270,7 @@ export const EN_REF_AQUATRANS = {
   'trans.btn.test': 'Test Connection',
   'trans.btn.export': 'Export Data',
   'trans.btn.import': 'Import Data',
+  'trans.blacklist': "Your server's rules doesn't allow using this tool. You might get banned if you try (idk, ask them if you want to know why)",
 }
 
 export const EN_REF = { ...EN_REF_USER, ...EN_REF_Welcome, ...EN_REF_GENERAL,
