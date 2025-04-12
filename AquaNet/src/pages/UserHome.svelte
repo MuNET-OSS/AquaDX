@@ -24,6 +24,8 @@
   import useLocalStorage from "../libs/hooks/useLocalStorage.svelte";
   import Line from "../components/chart/Line.svelte";
   import ChuniUserboxDisplay from "../components/settings/userbox/ChuniUserboxDisplay.svelte";
+  import apImage from "../assets/imgs/All Perfect.png";
+  import fcImage from "../assets/imgs/Full Combo.png";
 
   const TREND_DAYS = 60
 
@@ -67,14 +69,14 @@
           return b[1]?.lastLogin - a[1]?.lastLogin;
         });
         if (targetGames[0])
-          window.location.href = `/u/${username}/${targetGames[0][0]}`
+          window.location.href = `/legacy/u/${username}/${targetGames[0][0]}`
         return;
       }
       if (!games[game]) {
         // Find a valid game
         const valid = Object.entries(games).filter(([g, valid]) => valid)
         if (!valid || !valid[0]) return error = t("UserHome.NoValidGame")
-        window.location.href = `/u/${username}/${valid[0][0]}`
+        window.location.href = `/legacy/u/${username}/${valid[0][0]}`
       }
 
       Promise.all([
@@ -133,7 +135,7 @@
 <main id="user-home" class="content">
   {#if d}
     <div class="user-pfp">
-      <img use:pfp={d.user.aquaUser} alt="" class="pfp" on:error={pfpNotFound}>
+      <img use:pfp={d.user.aquaUser} alt="" class="pfp" on:error={pfpNotFound} crossorigin="anonymous">
       <div class="name-box">
         <div class="name-left">
 
@@ -162,11 +164,11 @@
       </div>
       <nav>
         {#each d.validGames as [g, name]}
-          <a href={`/u/${username}/${g}`} class:active={game === g}>{name}</a>
+          <a href={`/legacy/u/${username}/${g}`} class:active={game === g}>{name}</a>
         {/each}
 
         {#if me && me.username === username}
-          <a class="setting-icon clickable" use:tooltip={t("UserHome.Settings")} href="/settings">
+          <a class="setting-icon clickable" use:tooltip={t("UserHome.Settings")} href="/legacy/settings">
             <Icon icon="eos-icons:rotating-gear"/>
           </a>
         {/if}
@@ -330,14 +332,14 @@
       <div class="scores">
         {#each (showMoreRecent ? d.recent : d.recent.slice(0, 15)) as r, i}
           <div class:alt={i % 2 === 0}>
-            <img src={`${DATA_HOST}/d/${game}/music/00${r.musicId.toString().padStart(6, '0').substring(2)}.png`} alt="" on:error={coverNotFound} />
+            <img src={`${DATA_HOST}/d/${game}/music/00${r.musicId.toString().padStart(6, '0').substring(2)}.png`} alt="" on:error={coverNotFound} crossorigin="anonymous" />
             <div class="info">
               <div>{r.name ?? t("UserHome.UnknownSong")}</div>
               <div>
                 {#if r.isAllPerfect || r.isAllJustice}
-                  <img src="/assets/imgs/All Perfect.png" alt="All Perfect" />
+                  <img src={apImage} alt="All Perfect" crossorigin="anonymous" />
                 {:else if r.isFullCombo}
-                  <img src="/assets/imgs/Full Combo.png" alt="Full Combo" />
+                  <img src={fcImage} alt="Full Combo" crossorigin="anonymous" />
                 {/if}
                 <span class={`lv level-${r.level === 10 ? 5 : r.level}`}>
                   <span>

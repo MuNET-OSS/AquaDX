@@ -31,7 +31,7 @@
     <h2>{t("Leaderboard.Title")}</h2>
     <nav>
       {#each Object.entries(GAME_TITLE) as [k, v]}
-        <a href="/ranking/{k}" class:active={k === game}>{v}</a>
+        <a href="/legacy/ranking/{k}" class:active={k === game}>{v}</a>
       {/each}
     </nav>
   </div>
@@ -53,7 +53,7 @@
           <span class="rank">#{user.rank}</span>
           <span class="name">
             {#if user.username !== ""}
-              <a href="/u/{user.username}/{game}" class:registered={!(/user\d+/.test(user.username))}>{user.name}</a>
+              <a href="/legacy/u/{user.username}/{game}" class:registered={!(/user\d+/.test(user.username))}>{user.name}</a>
             {:else}
               <span>{user.name}</span>
             {/if}

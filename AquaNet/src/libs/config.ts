@@ -1,4 +1,5 @@
 import type { ChusanMatchingOption } from "./generalTypes"
+import noProfile from '../assets/imgs/no_profile.png'
 
 export const AQUA_HOST = import.meta.env.VITE_AQUA_HOST
 export const DATA_HOST = import.meta.env.VITE_DATA_HOST
@@ -14,7 +15,7 @@ export const QQ_INVITE = import.meta.env.VITE_QQ_INVITE
 // UI
 export const FADE_OUT = { duration: 200 }
 export const FADE_IN = { delay: 400 }
-export const DEFAULT_PFP = '/assets/imgs/no_profile.png'
+export const DEFAULT_PFP = noProfile
 
 export const ANNOUNCEMENT = '' // If set, will add an announcement to the top bar. Keep it short.
 

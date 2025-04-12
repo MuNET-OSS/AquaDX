@@ -42,8 +42,8 @@
 </script>
 
 <nav>
-  {#if path !== "/"}
-    <a class="logo" href={USER.isLoggedIn() ? "/home" : "/"}>
+  {#if path !== "/legacy" && path !== "/legacy/"}
+    <a class="logo" href={USER.isLoggedIn() ? "/legacy/home" : "/"}>
       <span>Minato.network</span>
     </a>
   {/if}
@@ -52,29 +52,30 @@
       <strong>{t('navigation.notice')}</strong>: {ANNOUNCEMENT}
     </div>
   {/if}
-  <a href="/home">{t('navigation.home').toLowerCase()}</a>
+  <a href="/legacy/home">{t('navigation.home').toLowerCase()}</a>
   <!-- <div on:click={() => alert("Coming soon™")} on:keydown={e => e.key === "Enter" && alert("Coming soon™")}
        role="button" tabindex="0">{t('navigation.maps').toLowerCase()}</div> -->
-  <a href="/ranking">{t('navigation.rankings').toLowerCase()}</a>
+  <a href="/legacy/ranking">{t('navigation.rankings').toLowerCase()}</a>
   {#if playedMai}
-    <a href="/pictures">photo</a>
+    <a href="/legacy/pictures">photo</a>
   {/if}
   {#if me}
-    <a href="/u/{me.username}" use:tooltip={t('navigation.profile')}>
-      <img alt="profile" class="pfp" use:pfp={me}/>
+    <a href="/legacy/u/{me.username}" use:tooltip={t('navigation.profile')}>
+      <img alt="profile" class="pfp" use:pfp={me} crossorigin="anonymous"/>
     </a>
   {/if}
 </nav>
 
 <Router {url}>
-  <Route path="/" component={Welcome} />
-  <Route path="/home" component={Home} />
-  <Route path="/ranking" component={Ranking} />
-  <Route path="/ranking/:game" component={Ranking} />
-  <Route path="/u/:username" component={UserHome} />
-  <Route path="/u/:username/:game" component={UserHome} />
-  <Route path="/settings" component={Settings} />
-  <Route path="/pictures" component={MaiPhoto} />
+  <Route path="/legacy" component={Welcome} />
+  <Route path="/legacy/" component={Welcome} />
+  <Route path="/legacy/home" component={Home} />
+  <Route path="/legacy/ranking" component={Ranking} />
+  <Route path="/legacy/ranking/:game" component={Ranking} />
+  <Route path="/legacy/u/:username" component={UserHome} />
+  <Route path="/legacy/u/:username/:game" component={UserHome} />
+  <Route path="/legacy/settings" component={Settings} />
+  <Route path="/legacy/pictures" component={MaiPhoto} />
 </Router>
 
 <style lang="sass">

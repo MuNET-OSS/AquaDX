@@ -2,7 +2,7 @@
   import { USER } from "../libs/sdk";
 
   if (USER.isLoggedIn()) {
-    window.location.href = "/home"
+    window.location.href = "/legacy/home"
   }
 
 </script>

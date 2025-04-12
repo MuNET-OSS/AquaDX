@@ -17,6 +17,7 @@ import CalHeatmap from 'cal-heatmap'
 import CalTooltip from 'cal-heatmap/plugins/Tooltip'
 import { AQUA_HOST, DEFAULT_PFP } from "./config"
 import type { AquaNetUser } from "./generalTypes"
+import noCover from '../assets/imgs/no_cover.jpg'
 
 export function title(t: string) {
   document.title = `Minato.network - ${t}`
@@ -152,7 +153,7 @@ export const CHARTJS_OPT: ChartOptions<'line'> = {
 }
 
 export const pfpNotFound = (e: Event) => (e.target as HTMLImageElement).src = DEFAULT_PFP
-export const coverNotFound = (e: Event) => (e.target as HTMLImageElement).src = "/assets/imgs/no_cover.jpg"
+export const coverNotFound = (e: Event) => (e.target as HTMLImageElement).src = noCover
 export const removeImg = (e: Event) => (e.target as HTMLImageElement).style.display = 'none'
 
 

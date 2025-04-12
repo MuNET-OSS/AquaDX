@@ -36,7 +36,6 @@
     "cal-heatmap": "^4.2.4",
     "chart.js": "^4.4.7",
     "d3": "^7.9.0",
-    "lxgw-wenkai-lite-webfont": "^1.7.0",
     "modern-normalize": "^3.0.1",
     "moment": "^2.30.1",
     "svelte-easy-crop": "^4.0.0",
