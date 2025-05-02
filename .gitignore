@@ -84,3 +84,5 @@ src/main/resources/meta/*/*.json
 test-diff
 htmlReport
 docs/logs
+
+sentryAuthToken.txt

@@ -7,6 +7,13 @@ import org.springframework.boot.ansi.AnsiOutput
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.scheduling.annotation.EnableScheduling
 import java.io.File
+import io.sentry.spring.jakarta.EnableSentry
+import org.springframework.core.Ordered
+
+@EnableSentry(
+    dsn = "https://cd71ed562e477e3ce3d8d418b424e0d8@sentry.c5y.moe/12",
+    exceptionResolverOrder = Ordered.LOWEST_PRECEDENCE
+)
 
 @SpringBootApplication
 @EnableScheduling

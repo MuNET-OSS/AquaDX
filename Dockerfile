@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.4
+
 # Use a multi-stage build to keep the image size small
 # Start with a Gradle image for building the project
 #FROM gradle:jdk21-alpine as builder
@@ -22,7 +24,8 @@ RUN ./gradlew dependencies
 COPY --chown=gradle:gradle src /home/gradle/src
 
 # Build the application
-RUN ./gradlew build -x test
+RUN --mount=type=secret,id=sentryAuthToken \
+      SECRET=$(cat /run/secrets/sentryAuthToken) ./gradlew build -x test
 
 # Start with a fresh image for the runtime
 FROM eclipse-temurin:21-jre-alpine
