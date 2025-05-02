@@ -25,7 +25,7 @@ COPY --chown=gradle:gradle src /home/gradle/src
 
 # Build the application
 RUN --mount=type=secret,id=sentryAuthToken \
-      SECRET=$(cat /run/secrets/sentryAuthToken) ./gradlew build -x test
+      SENTRY_AUTH_TOKEN=$(cat /run/secrets/sentryAuthToken) ./gradlew build -x test
 
 # Start with a fresh image for the runtime
 FROM eclipse-temurin:21-jre-alpine

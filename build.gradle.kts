@@ -51,6 +51,7 @@ dependencies {
     // Metrics
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("com.github.loki4j:loki-logback-appender:1.6.0")
 
     // Database
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.3.3")

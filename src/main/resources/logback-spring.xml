@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
-    <conversionRule conversionWord="cmp" converterClass="icu.samnyan.aqua.spring.LoggerComponent" />
-    <conversionRule conversionWord="cls" converterClass="icu.samnyan.aqua.spring.LoggerClassColor" />
-    <conversionRule conversionWord="correlationId" converterClass="org.springframework.boot.logging.logback.CorrelationIdConverter" />
-    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
-    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+<configuration debug="true">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="cmp" converterClass="icu.samnyan.aqua.spring.LoggerComponent"/>
+    <conversionRule conversionWord="cls" converterClass="icu.samnyan.aqua.spring.LoggerClassColor"/>
+    <conversionRule conversionWord="correlationId" converterClass="org.springframework.boot.logging.logback.CorrelationIdConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
     <!-- Define the log file name and path -->
     <property name="LOG_FILE" value="logs/AquaDX.log"/>
@@ -27,6 +27,36 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>https://loki.c5y.moe/loki/api/v1/push</url>
+            <auth>
+                <username>user</username>
+                <password>${LOKI_PASS}</password>
+            </auth>
+        </http>
+        <format>
+            <label>
+                <!-- Labels -->
+                <pattern>
+                    service_name = AquaDX,
+                    project = Minato,
+                    level = %level,
+                    thread = %thread,
+                    class = %logger,
+                    traceId = %mdc{traceId:-none}
+                </pattern>
+            </label>
+            <message class="com.github.loki4j.logback.JsonLayout">
+                <timestamp>
+                    <enabled>false</enabled>
+                </timestamp>
+            </message>
+        </format>
+        <batchTimeoutMs>5000</batchTimeoutMs>
+        <batchMaxItems>100</batchMaxItems>
+    </appender>
+
     <!-- Log levels -->
     <logger name="org.springframework" level="INFO"/>
 
@@ -34,5 +64,6 @@
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
+        <appender-ref ref="LOKI"/>
     </root>
 </configuration>
