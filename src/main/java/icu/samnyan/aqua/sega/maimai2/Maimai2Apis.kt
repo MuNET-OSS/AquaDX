@@ -231,7 +231,7 @@ fun Maimai2ServletController.initApis() {
         // val rebootEnd = rebootStart.plusSeconds(60)
         // Nope that didn't work
 
-        mapOf(
+        val defaultSettings = mapOf(
             "isAouAccession" to true,
             "gameSetting" to mapOf(
 //                "rebootStartTime" to GAME_SETTING_DATE_FMT.format(rebootStart),
@@ -266,6 +266,18 @@ fun Maimai2ServletController.initApis() {
                 "maxCountItem" to 0
             )
         )
+
+        try {
+            val file = java.io.File("/app/GameSetting.json")
+            if (file.exists()) {
+                val jsonSettings = file.readText().jsonMap()
+                defaultSettings + jsonSettings
+            }
+        } catch (e: Exception) {
+            // 如果读取失败，继续使用默认设置
+            e.printStackTrace()
+            defaultSettings
+        }
     }
 
     "GetServerAnnouncement" static { mapOf(
