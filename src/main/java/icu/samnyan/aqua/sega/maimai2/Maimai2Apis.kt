@@ -220,7 +220,7 @@ fun Maimai2ServletController.initApis() {
         """{"returnCode":1,"apiName":"com.sega.maimai2servlet.api.UploadUserPlaylogListApi"}"""
     }
 
-    "GetGameSetting" static {
+    "GetGameSetting" static api@{
         // The client-side implementation for reboot time is extremely cursed.
         // Only hour and minute are used, date is discarded and second is set to 0.
         // The time is adjusted to the next day if it's 12 hours or more from now.
@@ -264,20 +264,21 @@ fun Maimai2ServletController.initApis() {
                 "uploadPhotoDisable" to false,
                 "maxCountMusic" to 0,
                 "maxCountItem" to 0
-            )
+            ),
         )
 
         try {
             val file = java.io.File("/app/GameSetting.json")
             if (file.exists()) {
                 val jsonSettings = file.readText().jsonMap()
-                defaultSettings + jsonSettings
+                return@api defaultSettings + jsonSettings
             }
         } catch (e: Exception) {
             // 如果读取失败，继续使用默认设置
             e.printStackTrace()
-            defaultSettings
         }
+
+        defaultSettings
     }
 
     "GetServerAnnouncement" static { mapOf(
