@@ -24,7 +24,7 @@
     <div class="pictures">
       {#each photos as photo}
         <div class="photo-container">
-          <img class="rounded-2xl" src="{AQUA_HOST}/api/v2/game/mai2/my-photo/{photo}?token={token}" alt="Memorial" crossorigin="anonymous" />
+          <img class="rounded-2xl" src="{AQUA_HOST}/api/v2/game/mai2/my-photo/{photo}?token={token}" alt="Memorial" />
         </div>
       {/each}
     </div>

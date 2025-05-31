@@ -70,7 +70,7 @@
   {/if}
   {#if me}
     <a href="/legacy/u/{me.username}" use:tooltip={t('navigation.profile')}>
-      <img alt="profile" class="pfp" use:pfp={me} crossorigin="anonymous"/>
+      <img alt="profile" class="pfp" use:pfp={me}/>
     </a>
   {/if}
 </nav>

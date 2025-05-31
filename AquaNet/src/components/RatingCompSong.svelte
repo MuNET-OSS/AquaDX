@@ -16,7 +16,7 @@
 <div class="map-detail-container" transition:slide>
   <div class="scores">
     <div>
-      <img src={p.img} alt="" on:error={coverNotFound} crossorigin="anonymous" />
+      <img src={p.img} alt="" on:error={coverNotFound} />
       <div class="info">
         <div class="first-line">
           <div class="song-title">{p.name ?? t("UserHome.UnknownSong")}</div>

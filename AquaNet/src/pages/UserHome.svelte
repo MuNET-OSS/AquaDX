@@ -135,7 +135,7 @@
 <main id="user-home" class="content">
   {#if d}
     <div class="user-pfp">
-      <img use:pfp={d.user.aquaUser} alt="" class="pfp" on:error={pfpNotFound} crossorigin="anonymous">
+      <img use:pfp={d.user.aquaUser} alt="" class="pfp" on:error={pfpNotFound}>
       <div class="name-box">
         <div class="name-left">
 
@@ -332,14 +332,14 @@
       <div class="scores">
         {#each (showMoreRecent ? d.recent : d.recent.slice(0, 15)) as r, i}
           <div class:alt={i % 2 === 0}>
-            <img src={`${DATA_HOST}/d/${game}/music/00${r.musicId.toString().padStart(6, '0').substring(2)}.png`} alt="" on:error={coverNotFound} crossorigin="anonymous" />
+            <img src={`${DATA_HOST}/d/${game}/music/00${r.musicId.toString().padStart(6, '0').substring(2)}.png`} alt="" on:error={coverNotFound} />
             <div class="info">
               <div>{r.name ?? t("UserHome.UnknownSong")}</div>
               <div>
                 {#if r.isAllPerfect || r.isAllJustice}
-                  <img src={apImage} alt="All Perfect" crossorigin="anonymous" />
+                  <img src={apImage} alt="All Perfect" />
                 {:else if r.isFullCombo}
-                  <img src={fcImage} alt="Full Combo" crossorigin="anonymous" />
+                  <img src={fcImage} alt="Full Combo" />
                 {/if}
                 <span class={`lv level-${r.level === 10 ? 5 : r.level}`}>
                   <span>

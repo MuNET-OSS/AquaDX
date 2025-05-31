@@ -154,7 +154,7 @@
           {#if me && me.profilePicture}
             <div on:click={() => pfpField.click()} on:keydown={e => e.key === 'Enter' && pfpField.click()}
                  role="button" tabindex="0" class="clickable">
-              <img use:pfp={me} alt="Profile" crossorigin="anonymous" />
+              <img use:pfp={me} alt="Profile" />
             </div>
           {:else}
             <button on:click={() => pfpField.click()}>
