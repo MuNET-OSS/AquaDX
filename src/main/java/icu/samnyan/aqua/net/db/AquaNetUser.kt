@@ -148,50 +148,9 @@ class AquaUserServices(
         return false
     }
 
-    fun checkUsername(username: Str) = username.apply {
-        // Check if username is valid
-        if (length < 2) 400 - "Username must be at least 2 letters"
-        if (length > 32) 400 - "Username too long (max 32 letters)"
-        if (contains(" ")) 400 - "Username cannot contain spaces"
-
-        // card{id} is a reserved format
-        if (startsWith("user") && substring(4).toLongOrNull() != null)
-            400 - "Username cannot be 'user' + a number. This format is reserved for user IDs."
-
-        // Check if username is within A-Za-z0-9_-~.
-        find { !it.isLetterOrDigit() && it != '_' && it != '-' && it != '~' && it != '.' }?.let {
-            400 - "Username cannot contain `$it`. Please only use letters (A-Z), numbers (0-9), and `_-~.` characters. You can set a display name later."
-        }
-
-        // Check if user with the same username exists
-        if (userRepo.findByUsernameIgnoreCase(this) != null)
-            400 - "User with username `$this` already exists"
-    }
-
-    fun checkEmail(email: Str) = email.apply {
-        // Check if email is valid
-        if (!isValidEmail()) 400 - "Invalid email"
-
-        // Check if user with the same email exists
-        if (userRepo.findByEmailIgnoreCase(email) != null)
-            400 - "User with email `$email` already exists"
-    }
-
-    fun checkPwHash(password: Str) = password.run {
-        // Validate password
-        if (length < 8) 400 - "Password must be at least 8 characters"
-
-        hasher.encode(this)
-    }
-
     fun checkDisplayName(displayName: Str) = displayName.apply {
         // Check if display name is valid
         if (length > 32) 400 - "Display name too long (max 32 letters)"
-    }
-
-    fun checkProfileLocation(profileLocation: Str) = profileLocation.apply {
-        // Check if profile location is valid
-        if (length > 64) 400 - "Profile location too long (max 64 letters)"
     }
 
     fun checkProfileBio(profileBio: Str) = profileBio.apply {

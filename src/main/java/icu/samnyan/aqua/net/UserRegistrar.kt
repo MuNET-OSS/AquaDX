@@ -23,16 +23,9 @@ import kotlin.io.path.writeBytes
 @API("/api/v2/user")
 class UserRegistrar(
     val userRepo: AquaNetUserRepo,
-    val hasher: PasswordEncoder,
-    val turnstileService: TurnstileService,
-    val emailService: EmailService,
-    val geoIP: GeoIP,
     val jwt: JWT,
-    val confirmationRepo: EmailConfirmationRepo,
     val cardRepo: CardRepository,
-    val cardService: CardService,
     val validator: AquaUserServices,
-    val emailProps: EmailProperties,
     final val paths: PathProps
 ) {
     val portraitPath = paths.aquaNetPortrait.path()
