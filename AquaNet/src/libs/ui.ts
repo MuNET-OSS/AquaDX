@@ -20,7 +20,7 @@ import type { AquaNetUser } from "./generalTypes"
 import noCover from '../assets/imgs/no_cover.jpg'
 
 export function title(t: string) {
-  document.title = `Minato.network - ${t}`
+  document.title = `MuNET - ${t}`
 }
 
 export function registerChart() {

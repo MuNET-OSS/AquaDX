@@ -53,7 +53,7 @@
 <nav>
   {#if path !== "/legacy" && path !== "/legacy/"}
     <a class="logo" href={USER.isLoggedIn() ? "/legacy/home" : "/"}>
-      <span>Minato.network</span>
+      <span>MuNET</span>
     </a>
   {/if}
   {#if ANNOUNCEMENT}

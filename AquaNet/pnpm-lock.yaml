@@ -17,9 +17,6 @@ importers:
       d3:
         specifier: ^7.9.0
         version: 7.9.0
-      lxgw-wenkai-lite-webfont:
-        specifier: ^1.7.0
-        version: 1.7.0
       modern-normalize:
         specifier: ^3.0.1
         version: 3.0.1
@@ -1687,9 +1684,6 @@ packages:
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
-
-  lxgw-wenkai-lite-webfont@1.7.0:
-    resolution: {integrity: sha512-VcQYNRpdXAxaZsJ18rfT1mmAreGqkIFNZ/9pdVLbT2Tkb+2lLWJDXq4zYxMEk9AcecSnxO31R2LHh5ieLlxjRg==}
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -4014,8 +4008,6 @@ snapshots:
   lodash-es@4.17.21: {}
 
   lodash.merge@4.6.2: {}
-
-  lxgw-wenkai-lite-webfont@1.7.0: {}
 
   magic-string@0.30.17:
     dependencies:
