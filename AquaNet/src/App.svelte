@@ -12,6 +12,7 @@
   import { ANNOUNCEMENT } from "./libs/config";
   import { t } from "./libs/i18n";
   import { link } from "d3";
+  import logo from "./assets/imgs/munet.avif";
 
   console.log(`%c
 ┏━┓         ┳━┓━┓┏━
@@ -53,7 +54,7 @@
 <nav>
   {#if path !== "/legacy" && path !== "/legacy/"}
     <a class="logo" href={USER.isLoggedIn() ? "/legacy/home" : "/"}>
-      <span>MuNET</span>
+      <img src={logo} alt="">
     </a>
   {/if}
   {#if ANNOUNCEMENT}
@@ -103,9 +104,7 @@
     position: relative
 
     img
-      width: 1.5rem
-      height: 1.5rem
-      border-radius: vars.$border-radius
+      height: 2rem
       object-fit: cover
 
     .announcement

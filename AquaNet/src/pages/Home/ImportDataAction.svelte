@@ -31,7 +31,7 @@
       if (Array.isArray(maybeUserMusicList) && maybeUserMusicList.every(it => Array.isArray(it?.userMusicDetailList))) {
         // Is music list array
         await GAME.importMusicDetail("mai2", maybeUserMusicList.flatMap(it => it.userMusicDetailList));
-        location.href = `/u/${me.username}/mai2`;
+        location.href = `/mai2`;
         return;
       }
 
@@ -53,7 +53,7 @@
       }
 
       await GAME.import(game, data);
-      location.href = `/u/${me.username}/${game}`;
+      location.href = `/legacy/u/${me.username}/${game}`;
     } catch (e: any) {
       error = e.message;
       console.error(e);
