@@ -254,14 +254,5 @@ export const TRANSFER = {
     post('/api/v2/transfer/push', {}, { json: { client: d, data } }),
 }
 
-export const FEDY = {
-  status: (): Promise<{ linkedAt: number }> =>
-    post('/api/v2/fedy/status'),
-  link: (nonce: string): Promise<{ linkedAt: number }> =>
-    post('/api/v2/fedy/link', { nonce }),
-  unlink: () =>
-    post('/api/v2/fedy/unlink'),
-}
-
 // @ts-ignore
-window.sdk = { USER, USERBOX, CARD, GAME, DATA, SETTING, TRANSFER, FEDY }
+window.sdk = { USER, USERBOX, CARD, GAME, DATA, SETTING, TRANSFER }

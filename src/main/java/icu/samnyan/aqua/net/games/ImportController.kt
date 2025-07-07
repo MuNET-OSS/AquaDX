@@ -3,7 +3,6 @@ package icu.samnyan.aqua.net.games
 import ext.*
 import icu.samnyan.aqua.net.db.AquaNetUser
 import icu.samnyan.aqua.net.db.AquaUserServices
-import icu.samnyan.aqua.net.Fedy
 import icu.samnyan.aqua.net.utils.AquaNetProps
 import icu.samnyan.aqua.net.utils.SUCCESS
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,10 +15,9 @@ import java.util.*
 import kotlin.io.path.Path
 import kotlin.io.path.writeText
 import kotlin.reflect.KClass
-import org.springframework.context.annotation.Lazy
 
 data class ExportOptions(
-    val playlogAfter: String? = null
+    val playlogSince: String? = null
 )
 
 // Import class with renaming
@@ -70,7 +68,6 @@ abstract class ImportController<ExportModel: IExportClass<UserModel>, UserModel:
     @Autowired lateinit var netProps: AquaNetProps
     @Autowired lateinit var transManager: PlatformTransactionManager
     val trans by lazy { TransactionTemplate(transManager) }
-    @Autowired @Lazy lateinit var fedy: Fedy
 
     init {
         artemisRenames.values.forEach {
@@ -146,8 +143,6 @@ abstract class ImportController<ExportModel: IExportClass<UserModel>, UserModel:
                 importer(export, nu)
             }
         }
-
-        Fedy.getGameName(game)?.let { fedy.onImported(it, u.ghostCard.extId) }
 
         SUCCESS
     }
