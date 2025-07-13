@@ -92,7 +92,6 @@ class UpsertUserAllHandler(
         req.userLoginBonusList?.unique { it.bonusId }?.let { news ->
             repos.userLoginBonus.saveAll(news.mapApply {
                 id = repos.userLoginBonus.findByUserAndBonusId(u, bonusId)()?.id ?: 0 
-                isCurrent = false
             }) }
 
         req.userRatingList?.getOrNull(0)?.let { r ->

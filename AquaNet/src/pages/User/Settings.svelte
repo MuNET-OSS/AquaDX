@@ -27,8 +27,8 @@
 
   const profileFields = [
     [ 'displayName', t('settings.profile.name') ],
-    [ 'username', t('settings.profile.username') ],
-    [ 'password', t('settings.profile.password') ],
+    // [ 'username', t('settings.profile.username') ],
+    // [ 'password', t('settings.profile.password') ],
     /* Neither of these did anything of importance
     [ 'country', t('settings.profile.country') ],
     [ 'profileLocation', t('settings.profile.location') ],*/
