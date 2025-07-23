@@ -5,6 +5,7 @@
   import Icon from "@iconify/svelte";
   import { USER } from "../libs/sdk";
   import { t } from "../libs/i18n"
+  import MunetRegisterBanner from "../components/MunetRegisterBanner.svelte";
 
   let params = new URLSearchParams(window.location.search)
 
@@ -149,6 +150,9 @@ if (location.pathname !== '/') {
                    on:turnstile-error={_ => console.log(error = t("welcome.turnstile-error"))}
                    on:turnstile-expired={_ => window.location.reload()}
                    on:turnstile-timeout={_ => console.log(error = t('welcome.turnstile-timeout'))} />
+        {/if}
+        {#if isSignup}
+          <MunetRegisterBanner username={username} email={email}/>
         {/if}
       </div>
     {:else if state === "verify"}

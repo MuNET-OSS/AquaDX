@@ -2,9 +2,7 @@
   import { fade } from "svelte/transition"
   import { t } from "../../libs/i18n";
   import ActionCard from "../../components/ActionCard.svelte";
-  import StatusOverlays from "../../components/StatusOverlays.svelte";
   import { CARD, GAME, USER } from "../../libs/sdk";
-  import Icon from "@iconify/svelte";
 
   export let username: string;
   let shouldShow = navigator.language.startsWith('zh');
@@ -60,7 +58,6 @@
 {/if}
 
 <style lang="sass">
-  @use "../../vars"
   h3
     font-size: 1.3rem
     margin: 0
