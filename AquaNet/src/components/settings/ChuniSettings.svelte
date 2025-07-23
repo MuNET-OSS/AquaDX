@@ -70,7 +70,7 @@
         if (ubKey == 'namePlateId') ubKey = 'nameplateId'
         if (ubKey == 'systemVoiceId') ubKey = 'voiceId'
         return [{ iKey, ubKey: ubKey as keyof UserBox,
-          items: profile.items.filter(x => x.itemKind === iKind)
+          items: profile.items.filter(x => x.itemKind === iKind || (iKey == "trophy" && x.itemKind == 3))
         }]
       }
 
