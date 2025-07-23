@@ -351,12 +351,15 @@ class Mai2UserPlaylog : Mai2UserEntity(), IGenericGamePlaylog {
     var vsUserGradeRank = 0
     var vsRank = 0
     var playerNum = 0
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var playedUserId1: Long = 0
     var playedUserName1: String = ""
     var playedMusicLevel1 = 0
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var playedUserId2: Long = 0
     var playedUserName2: String = ""
     var playedMusicLevel2 = 0
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var playedUserId3: Long = 0
     var playedUserName3: String = ""
     var playedMusicLevel3 = 0

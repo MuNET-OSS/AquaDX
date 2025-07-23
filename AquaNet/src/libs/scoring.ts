@@ -1,5 +1,6 @@
 import { DATA_HOST } from "./config"
 import type { MusicMeta } from "./generalTypes"
+import { getMaimaiJacket } from "./maimai";
 
 export type GameName = 'mai2' | 'chu3' | 'ongeki' | 'wacca'
 
@@ -147,7 +148,8 @@ export function parseComposition(item: string, allMusics: Record<string, MusicMe
     mult,
     rank,
     difficulty: diff,
-    img: `${DATA_HOST}/d/${game}/music/00${mapData[0].toString().padStart(6, '0').substring(2)}.png`,
+    img: game === 'mai2' ? getMaimaiJacket(mapData[0]) :
+      `${DATA_HOST}/d/${game}/music/00${mapData[0].toString().padStart(6, '0').substring(2)}.png`,
     ratingChange: calcDxChange()
   }
 }

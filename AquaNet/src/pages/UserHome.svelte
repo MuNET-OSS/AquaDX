@@ -26,6 +26,7 @@
   import ChuniUserboxDisplay from "../components/settings/userbox/ChuniUserboxDisplay.svelte";
   import apImage from "../assets/imgs/All Perfect.png";
   import fcImage from "../assets/imgs/Full Combo.png";
+  import { getMaimaiJacket } from "../libs/maimai";
 
   const TREND_DAYS = 60
 
@@ -332,7 +333,10 @@
       <div class="scores">
         {#each (showMoreRecent ? d.recent : d.recent.slice(0, 15)) as r, i}
           <div class:alt={i % 2 === 0}>
-            <img src={`${DATA_HOST}/d/${game}/music/00${r.musicId.toString().padStart(6, '0').substring(2)}.png`} alt="" on:error={coverNotFound} />
+            <img src={
+              game === 'mai2' ? getMaimaiJacket(r.musicId) :
+              `${DATA_HOST}/d/${game}/music/00${r.musicId.toString().padStart(6, '0').substring(2)}.png`
+            } alt="" on:error={coverNotFound} />
             <div class="info">
               <div>{r.name ?? t("UserHome.UnknownSong")}</div>
               <div>

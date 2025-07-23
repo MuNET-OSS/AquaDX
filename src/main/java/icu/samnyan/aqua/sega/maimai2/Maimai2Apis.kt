@@ -216,6 +216,7 @@ fun Maimai2ServletController.initApis() {
         mapOf("gateId" to 7, "phaseId" to 5),
         mapOf("gateId" to 8, "phaseId" to 5),
         mapOf("gateId" to 9, "phaseId" to 5),
+        mapOf("gateId" to 10, "phaseId" to 5),
     )) }
     // Request: {userId}
     // Response: {userId, userKaleidxScopeList}
@@ -224,7 +225,7 @@ fun Maimai2ServletController.initApis() {
         val lst = db.userKaleidx.findByUser(u)
             .mapApply { isKeyFound = true }.toMutableList()
 
-        lst += (1..9).filter { i -> lst.none { it.gateId == i } }
+        lst += (1..10).filter { i -> lst.none { it.gateId == i } }
             .map { Mai2UserKaleidx().apply { user = u; gateId = it } }
 
         lst

@@ -79,7 +79,7 @@ const zhGeneral: typeof EN_REF_GENERAL = {
   'game.wacca': "华卡",
   "status.error": "发生错误",
   "status.error.hint": "出了一些问题，请稍后刷新重试或者",
-  "status.error.hint.link": "加我们的 Discord 群问一问",
+  "status.error.hint.link": "加我们的 QQ 群问一问",
   "status.detail": "详细信息：${detail}",
   "action.refresh": "刷新",
   "action.cancel": "取消",

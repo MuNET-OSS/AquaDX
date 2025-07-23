@@ -230,8 +230,13 @@ export const GAME = {
 }
 
 export const DATA = {
-  allMusic: (game: GameName): Promise<AllMusic> =>
-    fetch(`${DATA_HOST}/d/${game}/00/all-music.json`).then(it => it.json()),
+  allMusic: async (game: GameName): Promise<AllMusic> => {
+    if (game === 'mai2') {
+      const data = await import('../resources/mai2res/all-music.json')
+      return data.default as any
+    }
+    return await fetch(`${DATA_HOST}/d/${game}/00/all-music.json`).then(it => it.json())
+  },
   allItems: (game: GameName): Promise<Record<string, Record<string, any>>> =>
     fetch(`${DATA_HOST}/d/${game}/00/all-items.json`).then(it => it.json()),
 }
@@ -245,14 +250,5 @@ export const SETTING = {
     post(`/api/v2/game/${game}/user-detail-set`, { field, value }),
 }
 
-export const TRANSFER = {
-  check: (d: AllNetClient): Promise<TrCheckGood> =>
-    post('/api/v2/transfer/check', {}, { json: d }),
-  pull: (d: AllNetClient, callback: (data: TrStreamMessage) => void) =>
-    postStream('/api/v2/transfer/pull', {}, callback, { json: d }),
-  push: (d: AllNetClient, data: string) =>
-    post('/api/v2/transfer/push', {}, { json: { client: d, data } }),
-}
-
 // @ts-ignore
-window.sdk = { USER, USERBOX, CARD, GAME, DATA, SETTING, TRANSFER }
+window.sdk = { USER, USERBOX, CARD, GAME, DATA, SETTING }
