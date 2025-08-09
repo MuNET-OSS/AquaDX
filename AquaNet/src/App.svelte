@@ -53,7 +53,7 @@
 
 <nav>
   {#if path !== "/legacy" && path !== "/legacy/"}
-    <a class="logo" href={USER.isLoggedIn() ? "/legacy/home" : "/"}>
+    <a class="logo" href="/">
       <img src={logo} alt="">
     </a>
   {/if}
