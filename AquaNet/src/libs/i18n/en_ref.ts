@@ -44,7 +44,6 @@ export const EN_REF_Welcome = {
   'welcome.password-missing': 'Password is required',
   'welcome.email-password-missing': 'Email and password are required',
   'welcome.username-missing': 'Username/email is required',
-  'welcome.email-password-missing': 'Email and password are required',
   'welcome.waiting-turnstile': 'Waiting for Turnstile to verify your network environment...',
   'welcome.turnstile-error': 'Error verifying your network environment. Please turn off your VPN and try again.',
   'welcome.turnstile-timeout': 'Network verification timed out. Please try again.',
