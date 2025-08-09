@@ -16,7 +16,7 @@ class SessionToken(
 
     // Token creation time
     @Column(nullable = false)
-    var expiry: Instant = Instant.now().plusSeconds(14 * 86400),
+    var expiry: Instant = Instant.now().plusSeconds(3 * 86400),
 
     // Linking to the AquaNetUser
     @ManyToOne
