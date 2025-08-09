@@ -188,3 +188,21 @@ sentry {
     projectName = "aquadx-minato"
     authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
+
+val copyDependencies by tasks.registering(Copy::class) {
+    from(configurations.runtimeClasspath)
+    into("${layout.buildDirectory.get()}/libs/lib")
+}
+
+val packageThin by tasks.registering(Jar::class) {
+    group = "build"
+    from(sourceSets.main.get().output)
+    manifest {
+        attributes(
+            "Main-Class" to "icu.samnyan.aqua.EntryKt",
+            "Class-Path" to configurations.runtimeClasspath.get().files.joinToString(" ") { "lib/${it.name}" }
+        )
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    dependsOn(copyDependencies)
+}
