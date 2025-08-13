@@ -216,19 +216,13 @@ fun Maimai2ServletController.initApis() {
         mapOf("gateId" to 7, "phaseId" to 5),
         mapOf("gateId" to 8, "phaseId" to 5),
         mapOf("gateId" to 9, "phaseId" to 5),
-        mapOf("gateId" to 10, "phaseId" to 5),
+        mapOf("gateId" to 10, "phaseId" to 7),
     )) }
     // Request: {userId}
     // Response: {userId, userKaleidxScopeList}
     "GetUserKaleidxScope".unpaged {
         val u = db.userData.findByCardExtId(uid)() ?: (404 - "User not found")
-        val lst = db.userKaleidx.findByUser(u)
-            .mapApply { isKeyFound = true }.toMutableList()
-
-        lst += (1..10).filter { i -> lst.none { it.gateId == i } }
-            .map { Mai2UserKaleidx().apply { user = u; gateId = it } }
-
-        lst
+        db.userKaleidx.findByUser(u)
     }
     // Request: {userId, version, userData: [UserDetail], userPlaylogList: [UserPlaylog]}
     // Response: {userId, userItemList: [UserItem]}
