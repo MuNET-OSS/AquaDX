@@ -72,11 +72,8 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
         } ?: v
     }
 
-    @PostConstruct
-    fun rakingCacheInit() = thread { rankingCacheRun() }
-
     // Every 20 minutes
-    @Scheduled(fixedRate = 20, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedRate = 20, timeUnit = TimeUnit.MINUTES, initialDelay = 0)
     fun rankingCacheRun() = rankingCacheLock.maybeLock { rankingCacheCompute() }
 
     private val tableName = when (name) { "mai2" -> "maimai2"; "chu3" -> "chusan"; else -> name }

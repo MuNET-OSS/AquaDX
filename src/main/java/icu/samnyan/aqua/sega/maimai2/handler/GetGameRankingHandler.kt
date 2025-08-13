@@ -24,13 +24,7 @@ class GetGameRankingHandler(
     @Volatile
     private var musicRankingCache: List<MusicRankingItem> = emptyList()
 
-    init {
-        // To make sure the cache is initialized before the first request,
-        // not using `initialDelay = 0` in `@Scheduled`.
-        thread { refreshMusicRankingCache() }
-    }
-
-    @Scheduled(fixedDelay = 3600_000)
+    @Scheduled(fixedDelay = 3600_000, initialDelay = 2_000)
     private fun refreshMusicRankingCache() {
         // Get the play count of each music in the last N days
         val queryAfter = LocalDateTime.now().minusDays(LOOK_BACK_DAYS)
