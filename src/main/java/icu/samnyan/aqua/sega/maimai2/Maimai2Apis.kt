@@ -239,7 +239,7 @@ fun Maimai2ServletController.initApis() {
         """{"returnCode":1,"apiName":"com.sega.maimai2servlet.api.UploadUserPlaylogListApi"}"""
     }
 
-    "GetGameSetting" static api@{
+    "GetGameSetting" api@{
         // The client-side implementation for reboot time is extremely cursed.
         // Only hour and minute are used, date is discarded and second is set to 0.
         // The time is adjusted to the next day if it's 12 hours or more from now.
