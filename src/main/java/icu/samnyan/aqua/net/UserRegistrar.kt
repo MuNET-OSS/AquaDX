@@ -69,22 +69,6 @@ class UserRegistrar(
         SUCCESS
     }
 
-    val keychipRange = 1e9.toULong()..1e10.toULong() - 1UL
-
-    @API("/keychip")
-    @Doc("Get a Keychip ID so that the user can connect to the server.", "Success message")
-    suspend fun setupConnection(@RP token: Str) = jwt.auth(token) { u ->
-        u.keychip?.let { return mapOf("keychip" to it) }
-        log.info("Net: /user/keychip setup: ${u.auId} for ${u.username}")
-
-        // Generate a keychip id with 10 digits (e.g. A1234567890)
-        var new = "A" + keychipRange.random()
-        while (async { userRepo.findByKeychip(new) != null }) new = "A" + keychipRange.random()
-        async { userRepo.save(u.apply { keychip = new }) }
-
-        mapOf("keychip" to new)
-    }
-
     @API("/upload-pfp", consumes = ["multipart/form-data"])
     @Doc("Upload a profile picture for the user.", "Success message")
     suspend fun uploadPfp(@RP token: Str, @RP file: MultipartFile) = jwt.auth(token) { u ->
