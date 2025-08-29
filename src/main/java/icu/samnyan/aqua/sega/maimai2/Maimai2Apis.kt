@@ -3,6 +3,7 @@
 package icu.samnyan.aqua.sega.maimai2
 
 import ext.*
+import icu.samnyan.aqua.sega.allnet.TokenChecker.Companion.getCurrentSession
 import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusic
 import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusicDetail
@@ -196,14 +197,6 @@ fun Maimai2ServletController.initApis() {
     "GetGameNgMusicId" static { mapOf("length" to 0, "musicIdList" to empty) }
     "GetGameTournamentInfo" static { mapOf("length" to 0, "gameTournamentInfoList" to empty) }
 
-    // <phaseId: start offset days>
-    val phases = mapOf(1 to 1, 2 to 7, 3 to 14, 4 to 21)
-    // Find the minimum phase id that started prior to today.
-    fun findPhase(baseDate: LocalDate): Int {
-        val today = jstNow().toLocalDate()
-        return phases.entries.find { baseDate.plusDays(it.value.toLong()) > today }?.key ?: 5
-    }
-
     // Kaleidoscope, added on 1.50
     // [{gateId, phaseId}]
     "GetGameKaleidxScope" { mapOf("gameKaleidxScopeList" to ls(
@@ -285,6 +278,19 @@ fun Maimai2ServletController.initApis() {
                 "maxCountItem" to 0
             ),
         )
+
+        try {
+            val file = java.io.File("/app/GameSettingBlackListAuids.json")
+            if (file.exists()) {
+                val jsonSettings: List<Long> = file.readText().json() ?: emptyList()
+                if (jsonSettings.contains(getCurrentSession()?.user?.auId)) {
+                    return@api defaultSettings
+                }
+            }
+        } catch (e: Exception) {
+            // 如果读取失败，继续使用默认设置
+            e.printStackTrace()
+        }
 
         try {
             val file = java.io.File("/app/GameSetting.json")
