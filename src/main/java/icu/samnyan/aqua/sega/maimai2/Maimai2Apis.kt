@@ -282,8 +282,9 @@ fun Maimai2ServletController.initApis() {
         try {
             val file = java.io.File("/app/GameSettingBlackListAuids.json")
             if (file.exists()) {
-                val jsonSettings: List<Long> = file.readText().json() ?: emptyList()
-                if (jsonSettings.contains(getCurrentSession()?.user?.auId)) {
+                val jsonSettings: List<Number> = file.readText().json() ?: emptyList()
+                val currentAuId = getCurrentSession()?.user?.auId
+                if (currentAuId != null && jsonSettings.any { it.toLong() == currentAuId }) {
                     return@api defaultSettings
                 }
             }

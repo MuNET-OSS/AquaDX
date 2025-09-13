@@ -86,3 +86,4 @@ htmlReport
 docs/logs
 
 sentryAuthToken.txt
+config/GameSetting.json

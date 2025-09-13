@@ -42,6 +42,7 @@ class UpsertUserAllHandler(
             id = userData?.id ?: 0
             card = userData?.card ?: cardService.getCardByExtId(userId).orElseThrow()
             isNetMember = 1
+            banState = userData?.banState ?: 0
 
             // Validate username
             if (!userName.isValidUsername())
