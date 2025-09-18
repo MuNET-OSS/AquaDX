@@ -357,4 +357,74 @@ fun Maimai2ServletController.initApis() {
             "userRecommendSelectionMusicIdList" to (net.recommendedMusic[user.id] ?: empty)
         )
     }
+
+    // CIRCLE
+    "GetGameFesta" static { mapOf(
+        "gameFestaData" to mapOf(
+            "eventId" to 0,
+            "isRallyPeriod" to false,
+            "isCircleJoinNotAllowed" to true,
+            "jackingFestaSideId" to 0,
+            "festaSideDataList" to empty
+        ),
+        "gameResultFestaData" to mapOf(
+            "eventId" to 0,
+            "resultFestaSideDataList" to empty
+        )
+    ) }
+
+    "GetPlaceCircleData" static { mapOf(
+        "returnCode" to 0,
+        "circleId" to 0,
+        "aggrDate" to ""
+    ) }
+
+    "GetUserCircleData" static { mapOf(
+        "circleId" to 0,
+        "circleName" to "",
+        "isPlace" to false,
+        "circleClass" to 0,
+        "lastLoginDate" to "",
+        "circlePointRankingList" to empty
+    ) }
+
+    "GetUserCirclePointData" static { mapOf(
+        "userId" to 0,
+        "aggrDate" to "",
+        "userCirclePointDataList" to empty
+    ) }
+
+    "GetUserCirclePointRanking" static { mapOf(
+        "circleId" to 0,
+        "lastMonthCircleRank" to 0,
+        "lastMonthPoint" to 0,
+        "circleName" to "",
+        "aggrDate" to ""
+    ) }
+
+    "GetUserFesta" static { mapOf(
+        "userFestaData" to mapOf(
+            "eventId" to 0,
+            "circleId" to 0L,
+            "festaSideId" to 0,
+            "circleTotalFestaPoint" to 0,
+            "currentTotalFestaPoint" to 0,
+            "circleRankInFestaSide" to 0,
+            "circleRecordDate" to "",
+            "isDailyBonus" to false,
+            "participationRewardGet" to false,
+            "receivedRewardBorder" to 0
+        ),
+        "userResultFestaData" to mapOf(
+            "eventId" to 0,
+            "circleId" to 0L,
+            "circleName" to "",
+            "festaSideId" to 0,
+            "circleRankInFestaSide" to 0,
+            "receivedRewardBorder" to 0,
+            "circleTotalFestaPoint" to 0,
+            "resultRewardGet" to false
+        )
+    ) }
+
 }

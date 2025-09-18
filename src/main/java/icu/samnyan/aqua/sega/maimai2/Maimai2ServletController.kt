@@ -49,12 +49,13 @@ class Maimai2ServletController(
     val endpointList = setOf("GetGameRankingApi","GetUserCharacterApi","GetUserItemApi","GetUserPortraitApi",
         "GetUserRatingApi","UploadUserPhotoApi","UploadUserPlaylogApi","UploadUserPortraitApi","UpsertUserAllApi",
         "CMGetUserCardApi","CMGetUserCardPrintErrorApi","CMGetUserDataApi","CMGetUserItemApi","CMUpsertUserPrintApi",
-        "GetUserFavoriteItemApi","GetServerAnnouncementApi")
+        "GetUserFavoriteItemApi","GetServerAnnouncementApi","GetGameFestaApi","GetPlaceCircleDataApi",
+        "GetUserCircleDataApi","GetUserCirclePointDataApi","GetUserCirclePointRankingApi","GetUserFestaApi")
 
     val noopEndpoint = setOf("GetUserScoreRankingApi", "UpsertClientBookkeepingApi",
         "UpsertClientSettingApi", "UpsertClientTestmodeApi", "UpsertClientUploadApi", "Ping", "RemoveTokenApi",
         "CMLoginApi", "CMLogoutApi", "CMUpsertBuyCardApi", "UserLogoutApi", "GetGameMapAreaConditionApi",
-        "UpsertUserChargelogApi","UpsertClientPlayTimeApi")
+        "UpsertUserChargelogApi","UpsertClientPlayTimeApi","UpsertUserPlaceCircleRegistApi")
 
     val members = this::class.declaredMemberProperties
     val handlers: Map<String, SpecialHandler> = initH + endpointList.associateWith { api ->
