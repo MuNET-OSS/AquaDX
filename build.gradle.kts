@@ -18,7 +18,6 @@ plugins {
     id("org.springframework.boot") version "3.2.3"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("org.hibernate.orm") version "6.4.4.Final"
-    id("io.sentry.jvm.gradle") version "3.12.0"
     application
 }
 
@@ -168,25 +167,10 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-tasks.named("sentryCollectSourcesJava") {
-    dependsOn("kaptKotlin")
-}
-
 sourceSets {
     main {
         java.srcDir("${layout.buildDirectory.get()}/generated/source/kapt/main")
     }
-}
-
-sentry {
-    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-    // This enables source context, allowing you to see your source
-    // code as part of your stack traces in Sentry.
-    includeSourceContext = true
-
-    org = "sentry"
-    projectName = "aquadx-minato"
-    authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
 val copyDependencies by tasks.registering(Copy::class) {

@@ -3,6 +3,7 @@
 package icu.samnyan.aqua.sega.maimai2
 
 import ext.*
+import icu.samnyan.aqua.sega.allnet.TokenChecker.Companion.getCurrentSession
 import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusic
 import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusicDetail
@@ -196,14 +197,6 @@ fun Maimai2ServletController.initApis() {
     "GetGameNgMusicId" static { mapOf("length" to 0, "musicIdList" to empty) }
     "GetGameTournamentInfo" static { mapOf("length" to 0, "gameTournamentInfoList" to empty) }
 
-    // <phaseId: start offset days>
-    val phases = mapOf(1 to 1, 2 to 7, 3 to 14, 4 to 21)
-    // Find the minimum phase id that started prior to today.
-    fun findPhase(baseDate: LocalDate): Int {
-        val today = jstNow().toLocalDate()
-        return phases.entries.find { baseDate.plusDays(it.value.toLong()) > today }?.key ?: 5
-    }
-
     // Kaleidoscope, added on 1.50
     // [{gateId, phaseId}]
     "GetGameKaleidxScope" { mapOf("gameKaleidxScopeList" to ls(
@@ -287,6 +280,20 @@ fun Maimai2ServletController.initApis() {
         )
 
         try {
+            val file = java.io.File("/app/GameSettingBlackListAuids.json")
+            if (file.exists()) {
+                val jsonSettings: List<Number> = file.readText().json() ?: emptyList()
+                val currentAuId = getCurrentSession()?.user?.auId
+                if (currentAuId != null && jsonSettings.any { it.toLong() == currentAuId }) {
+                    return@api defaultSettings
+                }
+            }
+        } catch (e: Exception) {
+            // 如果读取失败，继续使用默认设置
+            e.printStackTrace()
+        }
+
+        try {
             val file = java.io.File("/app/GameSetting.json")
             if (file.exists()) {
                 val jsonSettings = file.readText().jsonMap()
@@ -350,4 +357,74 @@ fun Maimai2ServletController.initApis() {
             "userRecommendSelectionMusicIdList" to (net.recommendedMusic[user.id] ?: empty)
         )
     }
+
+    // CIRCLE
+    "GetGameFesta" static { mapOf(
+        "gameFestaData" to mapOf(
+            "eventId" to 0,
+            "isRallyPeriod" to false,
+            "isCircleJoinNotAllowed" to true,
+            "jackingFestaSideId" to 0,
+            "festaSideDataList" to empty
+        ),
+        "gameResultFestaData" to mapOf(
+            "eventId" to 0,
+            "resultFestaSideDataList" to empty
+        )
+    ) }
+
+    "GetPlaceCircleData" static { mapOf(
+        "returnCode" to 0,
+        "circleId" to 0,
+        "aggrDate" to ""
+    ) }
+
+    "GetUserCircleData" static { mapOf(
+        "circleId" to 0,
+        "circleName" to "",
+        "isPlace" to false,
+        "circleClass" to 0,
+        "lastLoginDate" to "",
+        "circlePointRankingList" to empty
+    ) }
+
+    "GetUserCirclePointData" static { mapOf(
+        "userId" to 0,
+        "aggrDate" to "",
+        "userCirclePointDataList" to empty
+    ) }
+
+    "GetUserCirclePointRanking" static { mapOf(
+        "circleId" to 0,
+        "lastMonthCircleRank" to 0,
+        "lastMonthPoint" to 0,
+        "circleName" to "",
+        "aggrDate" to ""
+    ) }
+
+    "GetUserFesta" static { mapOf(
+        "userFestaData" to mapOf(
+            "eventId" to 0,
+            "circleId" to 0L,
+            "festaSideId" to 0,
+            "circleTotalFestaPoint" to 0,
+            "currentTotalFestaPoint" to 0,
+            "circleRankInFestaSide" to 0,
+            "circleRecordDate" to "",
+            "isDailyBonus" to false,
+            "participationRewardGet" to false,
+            "receivedRewardBorder" to 0
+        ),
+        "userResultFestaData" to mapOf(
+            "eventId" to 0,
+            "circleId" to 0L,
+            "circleName" to "",
+            "festaSideId" to 0,
+            "circleRankInFestaSide" to 0,
+            "receivedRewardBorder" to 0,
+            "circleTotalFestaPoint" to 0,
+            "resultRewardGet" to false
+        )
+    ) }
+
 }
