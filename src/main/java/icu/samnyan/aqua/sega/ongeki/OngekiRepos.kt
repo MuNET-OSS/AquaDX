@@ -147,6 +147,23 @@ interface OgkUserTrainingRoomRepo : OngekiUserLinked<UserTrainingRoom> {
     fun findByUserAndRoomId(user: UserData, roomId: Int): Optional<UserTrainingRoom>
 }
 
+interface OgkUserRegionsRepo: OngekiUserLinked<UserRegions> {
+    fun findByUserAndRegionId(user: UserData, regionId: Int): UserRegions?
+}
+
+interface OgkGameGachaCardRepo : JpaRepository<GameGachaCard, Long> {
+    fun findAllByGachaId(gachaId: Long): List<GameGachaCard>
+
+    @Query("SELECT g FROM OngekiGameGachaCard g WHERE g.gachaId = :gachaId OR g.gachaId = 1112")
+    fun findAllByGachaIdAndPermanent(gachaId: Long): List<GameGachaCard>
+}
+
+interface OgkGameGachaRepo : JpaRepository<GameGacha, Long>
+
+interface OgkUserGachaRepo : OngekiUserLinked<UserGacha> {
+    fun findByUserAndGachaId(user: UserData, gachaId: Long): UserGacha?
+}
+
 // Re:Fresh
 interface OgkUserEventMapRepo : OngekiUserLinked<UserEventMap>
 interface OgkUserSkinRepo : OngekiUserLinked<UserSkin>
@@ -190,6 +207,8 @@ class OngekiUserRepos(
     val trainingRoom: OgkUserTrainingRoomRepo,
     val eventMap: OgkUserEventMapRepo,
     val skin: OgkUserSkinRepo,
+    val regions: OgkUserRegionsRepo,
+    val gacha: OgkUserGachaRepo,
 )
 
 @Component
@@ -202,6 +221,8 @@ class OngekiGameRepos(
     val present: OgkGamePresentRepo,
     val reward: OgkGameRewardRepo,
     val skill: OgkGameSkillRepo,
+    val gachaCard: OgkGameGachaCardRepo,
+    val gacha:OgkGameGachaRepo
 )
 
 @Component

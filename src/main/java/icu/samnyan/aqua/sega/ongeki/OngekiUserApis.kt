@@ -41,7 +41,10 @@ fun OngekiController.initUser() {
 
     "GetUserBpBase".unpaged { empty }
     "GetUserRatinglog".unpaged { empty }
-    "GetUserRegion".unpaged { empty }
+    "GetUserRegion".unpaged {
+        db.regions.findByUser_Card_ExtId(uid)
+            .map { mapOf("regionId" to it.regionId, "playCount" to it.playCount) }
+    }
 
     "GetUserTradeItem".unpaged {
         val start = parsing { data["startChapterId"]!!.int }
@@ -159,7 +162,7 @@ fun OngekiController.initUser() {
         )
 
         if (u.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            res["userName"] = "Migrated"
+            res["userName"] = "JiaQQqun / CardMigrated"
             res["level"] = 0
             res["exp"] = 0
             res["playerRating"] = 0

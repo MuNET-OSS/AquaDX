@@ -57,8 +57,6 @@ interface Mai2UserExtendRepo : Mai2UserLinked<Mai2UserExtend>
 interface Mai2UserFavoriteRepo : Mai2UserLinked<Mai2UserFavorite> {
     fun findByUserAndItemKind(user: Mai2UserDetail, kind: Int): Optional<Mai2UserFavorite>
 
-    fun findByUserIdAndItemKind(userId: Long, kind: Int): List<Mai2UserFavorite>
-
     fun findByUser_Card_ExtIdAndItemKind(userId: Long, kind: Int): Optional<Mai2UserFavorite>
 }
 
@@ -127,6 +125,10 @@ interface Mai2GameEventRepo : JpaRepository<Mai2GameEvent, Int> {
 
 interface Mai2GameSellingCardRepo : JpaRepository<Mai2GameSellingCard, Long>
 
+interface Mai2UserRegionsRepo: Mai2UserLinked<UserRegions> {
+    fun findByUserAndRegionId(user: Mai2UserDetail, regionId: Int): UserRegions?
+}
+
 @Component
 class Mai2Repos(
     val mapEncountNpc: Mai2MapEncountNpcRepo,
@@ -152,5 +154,6 @@ class Mai2Repos(
     val userIntimate: MAi2UserIntimateRepo,
     val gameCharge: Mai2GameChargeRepo,
     val gameEvent: Mai2GameEventRepo,
-    val gameSellingCard: Mai2GameSellingCardRepo
+    val gameSellingCard: Mai2GameSellingCardRepo,
+    val userRegions: Mai2UserRegionsRepo,
 )

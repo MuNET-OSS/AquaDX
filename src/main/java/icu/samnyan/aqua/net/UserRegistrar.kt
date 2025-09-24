@@ -90,4 +90,17 @@ class UserRegistrar(
 
         SUCCESS
     }
+
+    @API("/change-region")
+    @Doc("Change the region of the user.", "Success message")
+    suspend fun changeRegion(@RP token: Str, @RP regionId: Str) = jwt.auth(token) { u ->
+        // Check if the region is valid (between 1 and 47)
+        val r = regionId.toIntOrNull() ?: (400 - "Invalid region")
+        if (r !in 1..47) 400 - "Invalid region"
+        async {
+	        userRepo.save(u.apply { region = r.toString() })
+        }
+
+        SUCCESS
+        }
 }

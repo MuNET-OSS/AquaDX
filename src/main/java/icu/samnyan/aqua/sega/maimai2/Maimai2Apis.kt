@@ -8,9 +8,12 @@ import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusic
 import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusicDetail
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserKaleidx
+import icu.samnyan.aqua.sega.maimai2.model.userdata.UserRegions
 import java.time.LocalDate
 
 fun Maimai2ServletController.initApis() {
+    val log = logger()
+
     "GetUserExtend" { mapOf(
         "userId" to uid,
         "userExtend" to (db.userExtend.findSingleByUser_Card_ExtId(uid)() ?: (404 - "User not found"))
@@ -112,7 +115,7 @@ fun Maimai2ServletController.initApis() {
         )
 
         if (d.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            res["userName"] = "Migrated"
+            res["userName"] = "JiaQQqun / CardMigrated"
             res["dispRate"] = 1
             res["playerRating"] = 66564
             res["totalAwake"] = 7114
@@ -133,6 +136,20 @@ fun Maimai2ServletController.initApis() {
 
         if (d?.card?.status == CardStatus.MIGRATED_TO_MINATO) {
             res["returnCode"] = 0
+        }
+
+        // Get regionId from request
+        val region = data["regionId"] as? Int
+
+        // Only save if it is a valid region and the user has played at least a song
+        if (region != null && region > 0 && d != null) {
+            val region = db.userRegions.findByUserAndRegionId(d, region)?.apply {
+                playCount += 1
+            } ?: UserRegions().apply {
+                user = d
+                regionId = region
+            }
+            db.userRegions.save(region)
         }
 
         res
@@ -179,13 +196,19 @@ fun Maimai2ServletController.initApis() {
         mapOf("userId" to uid, "rivalId" to rivalId, "nextIndex" to 0, "userRivalMusicList" to res.values)
     }
 
+    "GetUserRegion" {
+        logger().info("Getting user regions for user $uid")
+        db.userRegions.findByUser_Card_ExtId(uid)
+            .map { mapOf("regionId" to it.regionId, "playCount" to it.playCount) }
+        .let { mapOf("userId" to uid, "length" to it.size, "userRegionList" to it) }
+    }
+
     "GetUserIntimate".unpaged {
         val u = db.userData.findByCardExtId(uid)() ?: (404 - "User not found")
         db.userIntimate.findByUser(u)
     }
 
     // Empty List Handlers
-    "GetUserRegion".unpaged { empty }
     "GetUserGhost".unpaged { empty }
     "GetUserFriendBonus" { mapOf("userId" to uid, "returnCode" to 0, "getMiles" to 0) }
     "GetTransferFriend" { mapOf("userId" to uid, "transferFriendList" to empty) }

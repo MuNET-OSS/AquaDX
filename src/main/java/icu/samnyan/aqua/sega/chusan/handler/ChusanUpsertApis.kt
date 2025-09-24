@@ -29,6 +29,17 @@ fun ChusanController.upsertApiInit() {
                 userNameEx = ""
             }.also { db.userData.saveAndFlush(it) }
 
+            // Only save if it is a valid region and the user has played at least a song
+            req.userPlaylogList?.firstOrNull()?.regionId?.let { rid ->
+                val region = db.userRegions.findByUserAndRegionId(u, rid)?.apply {
+                    playCount += 1
+                } ?: UserRegions().apply {
+                    user = u
+                    regionId = rid
+                }
+                db.userRegions.save(region)
+            }
+
             versionHelper[u.lastClientId] = u.lastDataVersion
 
             // Set users
