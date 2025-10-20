@@ -186,7 +186,7 @@ fun OngekiController.initUser() {
     "GetUserRecentRating".unpaged {
         db.generalData.findByUser_Card_ExtIdAndPropertyKey(uid, "recent_rating_list")()?.let { recent ->
             recent.propertyValue.split(',').dropLastWhile { it.isEmpty() }.map {
-                val (m, d, s) = it.split(':').map { it.int }
+                val (m, d, s) = it.split(':').dropLastWhile { it.isEmpty() }.map { it.int }
                 UserRecentRating(m, d, "1000000", s)
             }
         } ?: run {
