@@ -65,10 +65,8 @@ public class GetUserPreviewHandler implements BaseHandler {
                 resp.setDispTotalLv(option.getDispTotalLv());
             }
             resp.setTotalLv(user.getTotalLv());
-            json = mapper.write(resp);
-        } else {
-            json = "{}";
         }
+        json = mapper.write(resp);
 
         logger.info("Response: " + json);
         return json;

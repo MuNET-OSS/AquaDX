@@ -27,9 +27,21 @@ public class MaimaiServletControllerAdvice {
      */
     @ModelAttribute
     public Map<String, Object> preHandle(HttpServletRequest request) throws IOException {
+        // 对于 GET 请求或空请求体，返回空 Map
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            logger.info("Request {} : (GET request, no body)", request.getRequestURI());
+            return Map.of();
+        }
+        
         byte[] src = request.getInputStream().readAllBytes();
         String outputString = new String(src, StandardCharsets.UTF_8).trim();
         logger.info("Request {} : {}", request.getRequestURI(), outputString);
+        
+        // 如果请求体为空，返回空 Map
+        if (outputString.isEmpty()) {
+            return Map.of();
+        }
+        
         ObjectMapper mapper = new ObjectMapper();
 
         return mapper.readValue(outputString, new TypeReference<>() {

@@ -3,10 +3,7 @@ package icu.samnyan.aqua.sega.maimai.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import icu.samnyan.aqua.sega.maimai.handler.impl.*;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author samnyan (privateamusement@protonmail.com)
  */
 @RestController
-@RequestMapping("/g/mai")
+@RequestMapping({"/g/mai", "/g/mai/MaimaiServlet"})
 @AllArgsConstructor
 public class MaimaiServletController {
 
@@ -57,6 +54,11 @@ public class MaimaiServletController {
     public String getGameSetting(@ModelAttribute Map<String, Object> request, HttpServletRequest http) throws JsonProcessingException {
         request.put("localAddr", http.getLocalAddr());
         request.put("localPort", Integer.toString(http.getLocalPort()));
+        // 获取原始请求 URL（保留 /gs/ 路径），并将 GetGameSettingApi 替换为 old
+        String originalUrl = http.getHeader("wrapper original url");
+        String requestUrl = originalUrl != null ? originalUrl : http.getRequestURL().toString();
+        String baseUrl = requestUrl.replace("GetGameSettingApi", "old");
+        request.put("baseUrl", baseUrl);
         return getGameSettingHandler.handle(request);
     }
 
@@ -175,5 +177,13 @@ public class MaimaiServletController {
         return "{\"returnCode\":1,\"apiName\":\"com.sega.maimaiservlet.api.UpsertClientTestmodeApi\"}";
     }
 
+    @GetMapping("old/ping")
+    public String oldPing(@ModelAttribute Map<String, Object> request) {
+        return "ok";
+    }
 
+    @GetMapping({"old/{endpoint}/{placeid}/{keychip}/{userid}", "old/{endpoint}/{userid}"})
+    public String oldServerUserdata(@ModelAttribute Map<String, Object> request) {
+        return "{}";
+    }
 }

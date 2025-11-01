@@ -70,7 +70,8 @@ class CompressionFilter(
         if (isDfi) resp.setHeader("pragma", "DFI")
         else {
             resp.contentType = "application/json; charset=utf-8"
-            resp.setHeader("content-encoding", "deflate")
+            if(!req.servletPath.startsWith("/g/mai/"))
+                resp.setHeader("content-encoding", "deflate")
         }
 
         try {

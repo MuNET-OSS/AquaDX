@@ -49,8 +49,7 @@ public class GetGameSettingHandler implements BaseHandler {
         PropertyEntry end = propertyEntryRepository.findByPropertyKey("reboot_end_time")
                 .orElseGet(() -> new PropertyEntry("reboot_end_time", "2020-01-01 07:59:59.0"));
 
-        String addr = HOST_OVERRIDE.equals("") ? (String) request.get("localAddr") : HOST_OVERRIDE;
-        String port = PORT_OVERRIDE.equals("") ? (String) request.get("localPort") : PORT_OVERRIDE;
+        String baseUrl = (String) request.get("baseUrl");
 
         GameSetting gameSetting = new GameSetting(
                 false,
@@ -61,7 +60,7 @@ public class GetGameSettingHandler implements BaseHandler {
                 0,
                 "",
                 "",
-                "http://" + addr + ":" + port + "/",
+                baseUrl,
                 "");
 
         GetGameSettingResp resp = new GetGameSettingResp(
