@@ -48,7 +48,7 @@ public class GetUserPreviewHandler implements BaseHandler {
             UserData user = userDataOptional.get();
             Optional<UserWebOption> userWebOptionOptional = userWebOptionRepository.findByUser_Card_ExtId(userId);
             resp.setUserName(user.getUserName());
-            resp.setLogin(true);
+            resp.setLogin(false);
             resp.setLastDataVersion(user.getLastDataVersion());
             resp.setLastLoginDate(user.getLastPlayDate());
             resp.setLastPlayDate(user.getLastPlayDate());
