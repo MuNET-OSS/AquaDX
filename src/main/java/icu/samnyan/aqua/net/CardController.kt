@@ -29,7 +29,7 @@ class CardController(
     val us: AquaUserServices,
     val cardService: CardService,
     val cardGameService: CardGameService,
-    val props: AquaNetProps
+    val props: AquaNetProps,
 ) {
     companion object {
         val log = logger()

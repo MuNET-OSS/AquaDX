@@ -12,6 +12,8 @@ import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.general.service.CardService
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Lazy
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
@@ -55,16 +57,13 @@ class UserRegistrar(
     @API("/setting")
     @Doc("Validate and set a user setting field.", "Success message")
     suspend fun setting(@RP token: Str, @RP key: Str, @RP value: Str) = jwt.auth(token) { u ->
-        // Check if the key is a settable field
-        val field = SETTING_FIELDS.find { it.name == key } ?: (400 - "Invalid setting")
-
         async {
-            // Set the validated field
-            field.setter.call(u, field.checker.call(validator, value))
+            validator.update(u, key, value)
 
             // Save the user
             userRepo.save(u)
         }
+        fedy.onUserUpdated(u)
 
         SUCCESS
     }
@@ -87,6 +86,7 @@ class UserRegistrar(
             (portraitPath / name).writeBytes(bytes)
             userRepo.save(u.apply { profilePicture = name })
         }
+        fedy.onUserUpdated(u)
 
         SUCCESS
     }

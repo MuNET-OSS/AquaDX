@@ -1,11 +1,10 @@
 package icu.samnyan.aqua.sega.aimedb
 
 import ext.*
-import icu.samnyan.aqua.net.BotProps
+import icu.samnyan.aqua.net.Fedy
 import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.sega.allnet.AllNetProps
 import icu.samnyan.aqua.sega.general.model.Card
-import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.general.service.CardService
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufUtil
@@ -26,6 +25,7 @@ class AimeDB(
     val cardService: CardService,
     val us: AquaUserServices,
     val allNetProps: AllNetProps,
+    val fedy: Fedy,
 ): ChannelInboundHandlerAdapter() {
     val logger = logger()
 
@@ -68,9 +68,9 @@ class AimeDB(
      */
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         if (msg !is Map<*, *>) return
+        val type = msg["type"] as Int
+        val data = msg["data"] as ByteBuf
         try {
-            val type = msg["type"] as Int
-            val data = msg["data"] as ByteBuf
             val base = data.decodeHeader()
             val handler = handlers[type] ?: return logger.error("AimeDB: Unknown request type 0x${type.toString(16)}")
 
@@ -89,6 +89,7 @@ class AimeDB(
 
             handler.fn(data)?.let { ctx.write(it) }
         } finally {
+            data.release()
             ctx.flush()
             ctx.close()
         }
@@ -200,6 +201,8 @@ class AimeDB(
 
             status = 1
             aimeId = card.extId
+
+            fedy.onCardCreated(luid, card.extId)
         }
         else logger.warn("> Duplicated Aime Card Register detected, access code: $luid")
 

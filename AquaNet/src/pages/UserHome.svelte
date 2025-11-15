@@ -327,7 +327,6 @@
       <RatingComposition title="Recent 10" comp={d.user.ratingComposition.recent10} {allMusics} game={game != "auto" ? game : "mai2"} top={10}/>
     {/if}
 
-
     <div class="recent">
       <h2>{t('UserHome.RecentScores')}</h2>
       <div class="scores">
@@ -373,6 +372,22 @@
         {/if}
       </div>
     </div>
+
+    {#if d.user.favorites != null && d.user.favorites.length > 0}
+      <div class="favorites">
+        <h2>{t('UserHome.FavoriteSongs')}</h2>
+        <div class="scores">
+          {#each d.user.favorites as favoriteSongId, i}
+            <div>
+              <img src={`${DATA_HOST}/d/${game}/music/00${favoriteSongId.toString().padStart(6, '0').substring(2)}.png`} alt="" on:error={coverNotFound} />
+              <div class="info">
+                <div class="song-title">{allMusics[favoriteSongId.toString()] ? allMusics[favoriteSongId.toString()].name : t("UserHome.UnknownSong")}</div>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </div>
+    {/if}
   {/if}
 
   <StatusOverlays {error} loading={!d || isLoading} />
@@ -558,6 +573,57 @@
         > div
           flex-direction: row
           justify-content: space-between
+
+  .favorites
+    .scores
+      display: grid
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
+      gap: 20px
+
+      // Image and song info
+      > div
+        display: flex
+        align-items: center
+        gap: 20px
+        
+        background-color: rgba(white, 0.03)
+        border-radius: vars.$border-radius
+
+        img
+          width: 50px
+          height: 50px
+          border-radius: vars.$border-radius
+          object-fit: cover
+
+        // Song info and score
+        > div.info
+          flex: 1
+          display: flex
+          justify-content: space-between
+          overflow: hidden
+          flex-direction: column
+
+          .first-line
+            display: flex
+            flex-direction: row
+
+          // Limit song name to one line
+          .song-title
+            max-width: 90%
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+
+          // Make song score and rank not wrap
+          > div:last-child
+            white-space: nowrap
+
+          @media (max-width: vars.$w-mobile)
+            flex-direction: column
+            gap: 0
+
+            .rank-text
+              text-align: left
 
   // Recent Scores section
   .recent

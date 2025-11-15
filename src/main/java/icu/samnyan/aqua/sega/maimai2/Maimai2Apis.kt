@@ -10,6 +10,7 @@ import icu.samnyan.aqua.sega.maimai2.model.UserRivalMusicDetail
 import icu.samnyan.aqua.sega.maimai2.model.userdata.Mai2UserKaleidx
 import icu.samnyan.aqua.sega.maimai2.model.userdata.UserRegions
 import java.time.LocalDate
+import kotlin.random.Random
 
 fun Maimai2ServletController.initApis() {
     val log = logger()
@@ -115,7 +116,7 @@ fun Maimai2ServletController.initApis() {
         )
 
         if (d.card?.status == CardStatus.MIGRATED_TO_MINATO) {
-            res["userName"] = "JiaQQqun / CardMigrated"
+            res["userName"] = "JiaQQqun / ChangeDNS"
             res["dispRate"] = 1
             res["playerRating"] = 66564
             res["totalAwake"] = 7114
@@ -329,14 +330,6 @@ fun Maimai2ServletController.initApis() {
 
         defaultSettings
     }
-
-    "GetServerAnnouncement" static { mapOf(
-        "title" to "",
-        "announcement" to "",
-        "showOnIdle" to false,
-        "showOnUserLogin" to false,
-        "imageUrl" to "",
-    ) }
 
     "GetGameWeeklyData" static { mapOf(
         "gameWeeklyData" to mapOf(
