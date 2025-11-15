@@ -63,7 +63,6 @@ class UserRegistrar(
             // Save the user
             userRepo.save(u)
         }
-        fedy.onUserUpdated(u)
 
         SUCCESS
     }
@@ -86,7 +85,6 @@ class UserRegistrar(
             (portraitPath / name).writeBytes(bytes)
             userRepo.save(u.apply { profilePicture = name })
         }
-        fedy.onUserUpdated(u)
 
         SUCCESS
     }

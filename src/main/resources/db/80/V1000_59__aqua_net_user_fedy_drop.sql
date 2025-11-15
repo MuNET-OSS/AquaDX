@@ -1,1 +1,0 @@
-DROP TABLE aqua_net_user_fedy;
