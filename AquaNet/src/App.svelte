@@ -7,7 +7,6 @@
   import { CARD, USER } from "./libs/sdk";
   import type { AquaNetUser } from "./libs/generalTypes";
   import Settings from "./pages/User/Settings.svelte";
-  import MaiPhoto from "./pages/MaiPhoto.svelte";
   import { pfp, tooltip } from "./libs/ui"
   import { ANNOUNCEMENT } from "./libs/config";
   import { t } from "./libs/i18n";
@@ -85,7 +84,6 @@
   <Route path="/legacy/u/:username" component={UserHome} />
   <Route path="/legacy/u/:username/:game" component={UserHome} />
   <Route path="/legacy/settings" component={Settings} />
-  <Route path="/legacy/pictures" component={MaiPhoto} />
 </Router>
 
 <style lang="sass">

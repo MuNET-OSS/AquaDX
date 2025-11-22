@@ -1,15 +1,10 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import LinkCard from "./Home/LinkCard.svelte";
-  import SetupInstructions from "./Home/SetupInstructions.svelte";
   import { DISCORD_INVITE, FADE_IN, FADE_OUT } from "../libs/config";
   import { USER } from "../libs/sdk.js";
   import type { AquaNetUser } from "../libs/generalTypes";
   import StatusOverlays from "../components/StatusOverlays.svelte";
-  import ActionCard from "../components/ActionCard.svelte";
   import { t } from "../libs/i18n";
-  import ImportDataAction from "./Home/ImportDataAction.svelte";
-  import Communities from "./Home/Communities.svelte";
 
   USER.ensureLoggedIn();
 
@@ -34,12 +29,6 @@
       </div>
     {/each}
   </nav>
-
-  {#if tab === 0}
-    <div out:fade={FADE_OUT} in:fade={FADE_IN} class="action-cards">
-      <ImportDataAction/>
-    </div>
-  {/if}
 </main>
 
 <StatusOverlays {error} loading={!me}/>
