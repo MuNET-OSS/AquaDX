@@ -62,7 +62,8 @@ public class GetGameConnectHandler implements BaseHandler {
         String base = session == null ? "/g" : "/gs/" + session.getToken();
         List<GameConnect> gameConnectList = new ArrayList<>();
         GameConnect chuni = new GameConnect(0, 1, "http://" + addr + ":" + port + base + "/chu3/" + version + "/");
-        GameConnect mai = new GameConnect(1, 1, "http://" + addr + ":" + port + base + "/mai2/");
+        String maiTitleUri = session != null ? "http://110.40.128.13:84/" + session.getToken() + "/" : "http://110.40.128.13:84/invalid/";
+        GameConnect mai = new GameConnect(1, 1, maiTitleUri);
         GameConnect ongeki = new GameConnect(2, 1, "http://" + addr + ":" + port + base + "/ongeki/");
         gameConnectList.add(chuni);
         gameConnectList.add(mai);
