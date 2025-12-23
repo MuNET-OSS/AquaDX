@@ -6,6 +6,7 @@ import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.utils.AquaNetProps
 import icu.samnyan.aqua.net.utils.SUCCESS
 import icu.samnyan.aqua.sega.general.model.Card
+import icu.samnyan.aqua.sega.general.service.CardService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.NoRepositoryBean
@@ -48,6 +49,7 @@ interface IUserRepo<UserModel, ThisModel>: JpaRepository<ThisModel, Long> {
  * Import controller for a game
  *
  * @param game: 4-letter Game ID
+ * @param gameName: mai2/chu3/ongeki
  * @param exportFields: Mapping of type names to variables in the export model
  *      (e.g. "Mai2UserCharacter" -> Mai2DataExport::userCharacterList)
  * @param exportRepos: Mapping of variables to repositories that can be used to find the data
@@ -55,6 +57,7 @@ interface IUserRepo<UserModel, ThisModel>: JpaRepository<ThisModel, Long> {
  */
 abstract class ImportController<ExportModel: IExportClass<UserModel>, UserModel: IUserData>(
     val game: String,
+    val gameName: String,
     val exportClass: KClass<ExportModel>,
     val exportFields: Map<String, Var<ExportModel, Any>>,
     val exportRepos: Map<Var<ExportModel, Any>, IUserRepo<UserModel, *>>,
@@ -69,6 +72,7 @@ abstract class ImportController<ExportModel: IExportClass<UserModel>, UserModel:
     @Autowired lateinit var netProps: AquaNetProps
     @Autowired lateinit var transManager: PlatformTransactionManager
     val trans by lazy { TransactionTemplate(transManager) }
+    @Autowired lateinit var cardService: CardService
 
     init {
         artemisRenames.values.forEach {
@@ -144,6 +148,8 @@ abstract class ImportController<ExportModel: IExportClass<UserModel>, UserModel:
                 importer(export, nu)
             }
         }
+
+        cardService.updateCardTimestamp(u.ghostCard, gameName, resetCreatedAt = true)
 
         SUCCESS
     }

@@ -57,7 +57,8 @@ class CardGameService(
     val ongeki: OgkUserDataRepo,
     val diva: icu.samnyan.aqua.sega.diva.dao.userdata.PlayerProfileRepository,
     val cardRepo: CardRepository,
-    val em: EntityManager
+    val em: EntityManager,
+    val cardService: CardService
 ) {
     companion object {
         val log = logger()
