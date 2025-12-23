@@ -10,7 +10,6 @@
   import { pfp, tooltip } from "./libs/ui"
   import { ANNOUNCEMENT } from "./libs/config";
   import { t } from "./libs/i18n";
-  import { link } from "d3";
   import logo from "./assets/imgs/munet.avif";
 
   console.log(`%c
@@ -27,15 +26,11 @@
 
   export let url = "";
   let me: AquaNetUser
-  let playedMai = false
 
   if (USER.isLoggedIn())
   {
     USER.me().then(m => {
       me = m
-      CARD.userGames(me.username).then(game => {
-        playedMai = !!game.mai2
-      })
     }).catch(e => console.error(e))
 
     const themeStyle = document.createElement("link");
@@ -62,12 +57,7 @@
     </div>
   {/if}
   <a href="/legacy/home">{t('navigation.home').toLowerCase()}</a>
-  <!-- <div on:click={() => alert("Coming soon™")} on:keydown={e => e.key === "Enter" && alert("Coming soon™")}
-       role="button" tabindex="0">{t('navigation.maps').toLowerCase()}</div> -->
   <a href="/legacy/ranking">{t('navigation.rankings').toLowerCase()}</a>
-  {#if playedMai}
-    <a href="/legacy/pictures">photo</a>
-  {/if}
   {#if me}
     <a href="/legacy/u/{me.username}" use:tooltip={t('navigation.profile')}>
       <img alt="profile" class="pfp" use:pfp={me}/>
