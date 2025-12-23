@@ -59,39 +59,4 @@ class UserRegistrar(
 
         SUCCESS
     }
-
-    @API("/upload-pfp", consumes = ["multipart/form-data"])
-    @Doc("Upload a profile picture for the user.", "Success message")
-    suspend fun uploadPfp(@RP token: Str, @RP file: MultipartFile) = jwt.auth(token) { u ->
-        // Processing the image would lead to many open factors for attack
-        // (e.g. the JFIF Pixel Flood attack that ImageIO is vulnerable to)
-        // So we check file magic, then store the image without any processing
-        val bytes = file.bytes
-        val mime = TIKA.detect(bytes) ?: (400 - "Invalid file type")
-
-        // Check if the file is an image
-        if (!mime.startsWith("image/")) 400 - "Invalid file type"
-
-        // Save the image
-        val name = "${u.auId}${MIMES.forName(mime)?.extension ?: ".jpg"}"
-        async {
-            (portraitPath / name).writeBytes(bytes)
-            userRepo.save(u.apply { profilePicture = name })
-        }
-
-        SUCCESS
-    }
-
-    @API("/change-region")
-    @Doc("Change the region of the user.", "Success message")
-    suspend fun changeRegion(@RP token: Str, @RP regionId: Str) = jwt.auth(token) { u ->
-        // Check if the region is valid (between 1 and 47)
-        val r = regionId.toIntOrNull() ?: (400 - "Invalid region")
-        if (r !in 1..47) 400 - "Invalid region"
-        async {
-	        userRepo.save(u.apply { region = r.toString() })
-        }
-
-        SUCCESS
-        }
 }

@@ -6,16 +6,13 @@
   import { CARD, USER } from "../../libs/sdk";
   import StatusOverlays from "../../components/StatusOverlays.svelte";
   import Icon from "@iconify/svelte";
-  import { pfp } from "../../libs/ui";
   import { t, ts } from "../../libs/i18n";
   import { FADE_IN, FADE_OUT } from "../../libs/config";
-  import Cropper from "svelte-easy-crop";
   import UserBox from "../../components/settings/ChuniSettings.svelte";
   import Mai2Settings from "../../components/settings/Mai2Settings.svelte";
   import WaccaSettings from "../../components/settings/WaccaSettings.svelte";
   import GeneralGameSettings from "../../components/settings/GeneralGameSettings.svelte";
   import OngekiSettings from "../../components/settings/OngekiSettings.svelte";
-  import useLocalStorage from "../../libs/hooks/useLocalStorage.svelte";
 
   USER.ensureLoggedIn()
 
@@ -37,16 +34,11 @@
 
   // Fetch user data
   const getMe = () => USER.me().then((m) => {
-    if (pfpCropURL != null) {
-      URL.revokeObjectURL(pfpCropURL);
-      pfpField.value = "";
-      pfpCropURL = null;
-    }
     me = m
 
     CARD.userGames(m.username).then(games => {
       tabs = [
-        ...tabs, 
+        ...tabs,
         ...['chu3', 'mai2','wacca', 'ongeki'].filter(v => games[v as keyof typeof games]), // :xdx:
         'global'
       ]
@@ -55,9 +47,6 @@
   getMe()
 
   let changed: string[] = []
-  let pfpField: HTMLInputElement
-  let pfpCropURL: string | null = null;
-  let pfpCrop = { width: 0, height: 0, x: 0, y: 0 };
 
   function submit(field: string, value: string) {
     if (submitting) return
@@ -68,53 +57,6 @@
     }).catch(e => error = e.message).finally(() => submitting = "")
   }
 
-  function uploadPfp() {
-    if (submitting) return
-    // Don't know why this isn't just a part of the cropper module. Have to do this myself.. What a shame
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
-    const size = Math.round(Math.min(pfpCrop.width, pfpCrop.height, 1024));
-    canvas.width = size;
-    canvas.height = size;
-    let img = document.createElement("img");
-    img.onload = () => {
-      ctx?.drawImage(img, pfpCrop.x, pfpCrop.y, pfpCrop.width, pfpCrop.height, 0, 0, size, size);
-      canvas.toBlob(blob => {
-        if (!blob) return;
-        submitting = 'profilePicture'
-        USER.uploadPfp(blob as File).then(() => {
-          me.profilePicture = me.username
-          // reload
-          // this doesn't work btw
-          setTimeout(getMe, 200);
-        }).catch(e => error = e.message).finally(() => submitting = "")
-      });
-    }
-    img.src = pfpCropURL ?? "";
-  }
-  function handlePfpUpload(e: Event & { target: HTMLInputElement }) {
-    if (!e.target) return;
-    let files = e?.target?.files;
-    if (!files || files.length <= 0) return;
-    let file = files[0];
-    console.log(me.username, me);
-    switch (file.type) {
-      case "image/gif":
-        USER.uploadPfp(file).then(() => {
-          me.profilePicture = me.username
-          // reload
-          setTimeout(getMe, 200);
-        }).catch(e => error = e.message).finally(() => submitting = "")
-        break;
-      case "image/png":
-      case "image/jpeg":
-      case "image/webp":
-        pfpCropURL = URL.createObjectURL(file);
-        break;
-      default:
-        error = t("settings.profile.bad-format");
-    }
-  };
   function logOut() {
     localStorage.removeItem("token");
     location.href = "/";
@@ -142,25 +84,6 @@
   {#if tab === 0 && me}
     <!-- Tab 0: Profile settings -->
     <div out:fade={FADE_OUT} in:fade={FADE_IN} class="fields">
-      <div class="field">
-        <label for="profile-upload">{t('settings.profile.picture')}</label>
-        <div>
-          {#if me && me.profilePicture}
-            <div on:click={() => pfpField.click()} on:keydown={e => e.key === 'Enter' && pfpField.click()}
-                 role="button" tabindex="0" class="clickable">
-              <img use:pfp={me} alt="Profile" />
-            </div>
-          {:else}
-            <button on:click={() => pfpField.click()}>
-              {t('settings.profile.upload-new')}
-            </button>
-          {/if}
-        </div>
-        <!-- Genuinely don't know why this is giving me an intellisense error. Works fine. -->
-        <input id="profile-upload" type="file" accept="image/gif,image/png,image/jpeg,image/webp" style="display: none" bind:this={pfpField}
-               on:change={handlePfpUpload} />
-      </div>
-
       {#each profileFields as [field, name], i (field)}
         <div class="field">
           <label for={field}>{name}</label>
@@ -168,9 +91,9 @@
             {#if field == "profileBio"}
              <textarea id={field} bind:value={me[field]} on:input={() => changed = [...changed, field]} maxlength=255 placeholder={t('settings.profile.unset')}></textarea>
             {:else}
-              <input id={field} type="text" use:passwordAction={field === 'password'}
+              <input id={field} type="text"
                 bind:value={me[field]} on:input={() => changed = [...changed, field]}
-                placeholder={field === 'password' ? t('settings.profile.unchanged') : t('settings.profile.unset')}/>
+                placeholder={t('settings.profile.unset')}/>
             {/if}
 
             {#if changed.includes(field) && me[field]}
@@ -216,22 +139,6 @@
 
   <StatusOverlays {error} loading={!me || !!submitting} />
 </main>
-
-{#if pfpCropURL != null}
-  <div class="overlay" transition:fade>
-    <div>
-      <div class="cropper-container">
-        <Cropper maxZoom={1e9} oncropcomplete={(e) => pfpCrop = e.pixels} image={pfpCropURL ?? "assets/imgs/no_profile.png"} aspect={1} cropShape="round"></Cropper>
-      </div>
-      <button on:click={uploadPfp}>
-        {t("settings.profile.save")}
-      </button>
-      <button on:click={getMe}>
-        {t("back")}
-      </button>
-    </div>
-  </div>
-{/if}
 
 <style lang="sass">
   @use "../../vars"

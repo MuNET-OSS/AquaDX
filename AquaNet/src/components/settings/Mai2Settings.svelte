@@ -65,7 +65,6 @@
       </div>
     </div>
   {/each}
-  <GameSettingFields game="mai2"/>
   <button class="exportButton" on:click={exportData}>
     <Icon icon="bxs:file-export"/>
     {t('settings.export')}

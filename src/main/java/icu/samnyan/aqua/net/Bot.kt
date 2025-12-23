@@ -47,34 +47,6 @@ class BotController(
         }
     }
 
-    @API("/migrated-to-minato")
-    fun migratedToMinato(@RP secret: Str, @RP card: Str): Any {
-        secret.checkSecret()
-
-        // 1. Find user card
-        val oc = (us.cardRepo.findByLuid(card)() ?: (404 - "Card not found")).maybeGhost()
-
-        // 2. Change the status to migrated
-        us.cardRepo.save(oc.apply {
-            status = CardStatus.MIGRATED_TO_MINATO
-            accessTime = utcNow()
-        })
-        return SUCCESS
-    }
-
-    @API("/clear-migrate-flag")
-    fun clearMigrateFlag(@RP secret: Str, @RP card: Str): Any {
-        secret.checkSecret()
-
-        val oc = (us.cardRepo.findByLuid(card)() ?: (404 - "Card not found")).maybeGhost()
-
-        us.cardRepo.save(oc.apply {
-            status = CardStatus.NORMAL
-            accessTime = utcNow()
-        })
-        return SUCCESS
-    }
-
     @Transactional
     @PostMapping("/debug-user-profile")
     @Doc("Obtain debug information for a user card", "User card details")

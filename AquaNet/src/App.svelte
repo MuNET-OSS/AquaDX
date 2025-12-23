@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Route, Router } from "svelte5-router";
-  import Welcome from "./pages/Welcome.svelte";
   import UserHome from "./pages/UserHome.svelte";
   import Home from "./pages/Home.svelte";
   import Ranking from "./pages/Ranking.svelte";
@@ -32,15 +31,6 @@
     USER.me().then(m => {
       me = m
     }).catch(e => console.error(e))
-
-    const themeStyle = document.createElement("link");
-    themeStyle.rel = "stylesheet";
-    switch (localStorage.getItem("theme")) {
-      case "cn":
-        themeStyle.href = "/assets/theme/cn.css";
-    };
-    if (themeStyle.href)
-      document.head.appendChild(themeStyle);
   }
   let path = window.location.pathname;
 </script>
@@ -56,7 +46,6 @@
       <strong>{t('navigation.notice')}</strong>: {ANNOUNCEMENT}
     </div>
   {/if}
-  <a href="/legacy/home">{t('navigation.home').toLowerCase()}</a>
   <a href="/legacy/ranking">{t('navigation.rankings').toLowerCase()}</a>
   {#if me}
     <a href="/legacy/u/{me.username}" use:tooltip={t('navigation.profile')}>
@@ -66,8 +55,8 @@
 </nav>
 
 <Router {url}>
-  <Route path="/legacy" component={Welcome} />
-  <Route path="/legacy/" component={Welcome} />
+  <Route path="/legacy" component={Home} />
+  <Route path="/legacy/" component={Home} />
   <Route path="/legacy/home" component={Home} />
   <Route path="/legacy/ranking" component={Ranking} />
   <Route path="/legacy/ranking/:game" component={Ranking} />
@@ -114,6 +103,7 @@
     .pfp
       width: 2rem
       height: 2rem
+      border-radius: 50%
 
     .logo
       display: flex
