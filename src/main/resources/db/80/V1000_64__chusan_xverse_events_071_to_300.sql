@@ -1,4 +1,4 @@
-INSERT INTO chusan_game_event (id, type, end_date, start_date, enable)
+INSERT IGNORE INTO chusan_game_event (id, type, end_date, start_date, enable)
 VALUES
     (17090, 1, '2029-01-01 00:00:00.000000','2019-01-01 00:00:00.000000',true),
     (17091, 2, '2029-01-01 00:00:00.000000','2019-01-01 00:00:00.000000',true),
