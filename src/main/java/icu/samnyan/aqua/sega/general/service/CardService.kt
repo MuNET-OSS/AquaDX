@@ -3,7 +3,6 @@ package icu.samnyan.aqua.sega.general.service
 import ext.Bool
 import ext.Str
 import ext.minus
-import icu.samnyan.aqua.net.Fedy
 import icu.samnyan.aqua.net.db.AquaNetUser
 import icu.samnyan.aqua.sega.general.dao.CardRepository
 import icu.samnyan.aqua.sega.general.model.Card
@@ -20,7 +19,7 @@ import kotlin.jvm.optionals.getOrNull
  * @author samnyan (privateamusement@protonmail.com)
  */
 @Service
-class CardService(val cardRepo: CardRepository, val cardTimestampRepo: CardTimestampRepo, val fedy: Fedy)
+class CardService(val cardRepo: CardRepository, val cardTimestampRepo: CardTimestampRepo)
 {
     /**
      * Find a card by External ID
@@ -119,6 +118,5 @@ class CardService(val cardRepo: CardRepository, val cardTimestampRepo: CardTimes
     fun updateCardTimestamp(card: Card, game: Str, now: Instant = Instant.now(), resetCreatedAt: Bool = false) {
         cardTimestampRepo.save(getCardTimestamp(card, game, now).apply { updatedAt = now }
             .apply { if (resetCreatedAt) createdAt = now });
-        fedy.onDataUpdated(card.extId, game, resetCreatedAt)
     }
 }
