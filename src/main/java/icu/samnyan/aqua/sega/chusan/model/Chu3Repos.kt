@@ -68,6 +68,13 @@ interface Chu3UserCourseRepo : Chu3UserLinked<UserCourse> {
     fun findByUserAndCourseId(user: Chu3UserData, courseId: Int): UserCourse?
 }
 
+interface Chu3UserLinkedVerseRepo : Chu3UserLinked<Chu3UserLinkedVerse> {
+    fun findAllByUser(user: Chu3UserData): List<Chu3UserLinkedVerse?>
+    fun findByUserAndLinkedVerseId(user: Chu3UserData, linkedVerseId: Int): Chu3UserLinkedVerse?
+}
+
+interface Chu3GameLinkedVerseRepo : JpaRepository<GameLinkedVerse, Int>
+
 interface Chu3UserDataRepo : GenericUserDataRepo<Chu3UserData> {
     fun findTopByLastClientIdOrderByLastPlayDateDesc(lastClientId: String): Chu3UserData?
 }
@@ -201,10 +208,12 @@ class Chu3Repos(
     val netBattleLog: Chu3NetBattleLogRepo,
     val userMisc: Chu3UserMiscRepo,
     val userChallenge: Chu3UserChallengeRepo,
+    val userLinkedVerse: Chu3UserLinkedVerseRepo,
     val gameCharge: Chu3GameChargeRepo,
     val gameEvent: Chu3GameEventRepo,
     val gameGachaCard: Chu3GameGachaCardRepo,
     val gameGacha: Chu3GameGachaRepo,
     val gameLoginBonusPresets: Chu3GameLoginBonusPresetsRepo,
-    val gameLoginBonus: Chu3GameLoginBonusRepo
+    val gameLoginBonus: Chu3GameLoginBonusRepo,
+    val gameLinkedVerse: Chu3GameLinkedVerseRepo
 )

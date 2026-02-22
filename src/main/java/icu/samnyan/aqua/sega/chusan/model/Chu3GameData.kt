@@ -92,3 +92,12 @@ class GameLoginBonusPreset : IdExposedEntity() {
     var presetName: String? = null
     var isEnabled = false
 }
+
+@Entity(name = "ChusanGameLinkedVerse")
+@Table(name = "chusan_game_linked_verse")
+class GameLinkedVerse: IdExposedEntity() {
+    var musicId = 0
+    var name: String? = null
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
+}

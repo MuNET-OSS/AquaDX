@@ -6,6 +6,7 @@ import icu.samnyan.aqua.sega.chusan.model.request.Chu3UserAll
 import icu.samnyan.aqua.sega.chusan.model.userdata.*
 import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating
+import kotlinx.serialization.encodeToString
 
 @Suppress("UNCHECKED_CAST")
 fun ChusanController.upsertApiInit() {
@@ -55,7 +56,7 @@ fun ChusanController.upsertApiInit() {
                 db.userRegions.save(region)
             }
 
-            versionHelper[u.lastClientId] = u.lastDataVersion
+            versionHelper.set(u.lastClientId, u.lastDataVersion)
 
             // Set users
             listOfNotNull(
@@ -158,6 +159,13 @@ fun ChusanController.upsertApiInit() {
             userUnlockChallengeList?.let { list ->
                 db.userChallenge.saveAll(list.distinctBy { it.unlockChallengeId }.mapApply {
                     id = db.userChallenge.findByUserAndUnlockChallengeId(u, unlockChallengeId)?.id ?: 0 }) }
+
+            userLinkedVerseList?.let { list ->
+                db.userLinkedVerse.saveAll(list.map{
+                    it.apply{ it.user = u }
+                }.distinctBy { it.linkedVerseId }.mapApply {
+                    id = db.userLinkedVerse.findByUserAndLinkedVerseId(u, linkedVerseId)?.id ?: 0 })
+                }
 
             // Need testing
 //            userLoginBonusList?.let { list ->

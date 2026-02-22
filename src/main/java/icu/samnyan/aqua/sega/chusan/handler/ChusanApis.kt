@@ -9,6 +9,7 @@ import icu.samnyan.aqua.sega.chusan.model.userdata.Chu3UserItem
 import icu.samnyan.aqua.sega.chusan.model.userdata.UserMusicDetail
 import icu.samnyan.aqua.sega.general.model.CardStatus
 import icu.samnyan.aqua.sega.general.model.response.UserRecentRating
+import org.springframework.data.repository.findByIdOrNull
 import java.time.format.DateTimeFormatter
 
 @Suppress("UNCHECKED_CAST")
@@ -28,13 +29,19 @@ fun ChusanController.chusanInit() {
         mapOf("type" to type, "length" to 0, "gameRankingList" to lst)
     }
 
-    // VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE
     "GetGameCourseLevel" {
         // gameCourseLevelList: [{courseId: int, startDate: date, endDate: date}]
-        mapOf("length" to 0, "gameCourseLevelList" to listOf(
+        val opts = TokenChecker.getCurrentSession()?.user?.gameOptions
+        val lst = listOf(
+            // Unlock Challenge
             mapOf("courseId" to 300004, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14"),
-            mapOf("courseId" to 300009, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14")
-        ))
+            mapOf("courseId" to 300009, "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14"),
+        ) + (0..9).toList().map {
+            // Linked Verse
+            mapOf("courseId" to 500000 + (opts?.chusanLvDifficulty ?: 5) + (it * 100), "startDate" to "2019-01-01 00:00:00", "endDate" to "2077-01-01 11:45:14")
+        }
+
+        mapOf("length" to lst.size, "gameCourseLevelList" to lst)
     }
 
     "GetGameUCCondition" {
@@ -55,6 +62,40 @@ fun ChusanController.chusanInit() {
         db.userChallenge.findByUser_Card_ExtId(uid)
     }
 
+    // The implementation here isn't preferable, but it's functional
+    // Condition checks if the user beat a song from a previous stage and unlocks it if so
+    fun getLinkedVerseCampaign(): List<Any> {
+        val opts = TokenChecker.getCurrentSession()?.user?.gameOptions
+        // No other conditions appear to work properly, so the request for the gates is pretty large. Sorry
+        fun getChartConditions(musicId: Int) =
+            if (opts != null && opts.chusanLvUnlockAll) {
+                listOf( mapOf("type" to 3, "conditionId" to 0, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2099-12-31 00:00:00") )
+            } else {
+                (0..5).toList().map {
+                    mapOf("type" to 26, "conditionId" to (musicId * 100) + it, "logicalOpe" to 2, "startDate" to "2024-03-08 01:00:00", "endDate" to "2099-12-31 00:00:00") }}
+
+        return db.gameLinkedVerse.findAll().map {
+            val lst = getChartConditions(it.musicId)
+            mapOf("linkedVerseId" to it.id + 1, "length" to lst.size, "conditionList" to lst)
+        } + // ORIGIN is always left unlocked by default
+            listOf(mapOf("linkedVerseId" to 10001, "length" to 1, "conditionList" to listOf(
+                mapOf("type" to 3, "conditionId" to 0, "logicalOpe" to 1, "startDate" to "2024-03-08 01:00:00", "endDate" to "2099-12-31 00:00:00")
+            )))
+    }
+    "GetGameLVConditionOpen" {
+        val lst = getLinkedVerseCampaign()
+        mapOf("length" to lst.size, "gameLinkedVerseConditionOpenList" to lst)
+    }
+    "GetGameLVConditionUnlock" {
+        val lst = getLinkedVerseCampaign()
+        mapOf("length" to lst.size, "gameLinkedVerseConditionUnlockList" to lst)
+    }
+
+    "GetUserLV" {
+        val lst = db.userLinkedVerse.findByUser_Card_ExtId(uid)
+        mapOf("length" to lst.size, "userLinkedVerseList" to lst, "userId" to uid)
+    }
+
     "GetUserRecMusic".paged("userRecMusicList") {
         // musicId: int, recMusicList: string
         // musicId cannot be the same with the id in recMusicList
@@ -66,14 +107,9 @@ fun ChusanController.chusanInit() {
     }
 
     "GetUserRecRating".paged("userRecRatingList") {
-        // ratingMin: int, ratingMax: int, recMusicList: string
-        // This doesn't work
-//        listOf(
-//            mapOf("ratingMin" to 0, "ratingMax" to 30, "recMusicList" to "2387,1;2658,1")
-//        )
+        // Unimplemented for now
         empty
     }
-    // VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE VERSE
 
     // Stub handlers
     "GetGameIdlist" { """{"type":"${data["type"]}","length":"0","gameIdlistList":[]}""" }
@@ -279,10 +315,14 @@ fun ChusanController.chusanInit() {
         val team = db.userData.findByCard_ExtId(uid)()?.card?.aquaUser?.gameOptions?.chusanTeamName?.some
             ?: props.teamName?.some ?:  "一緒に歌おう！"
 
-        mapOf(
-            "userId" to uid, "teamId" to 1, "teamRank" to 1, "teamName" to team,
-            "userTeamPoint" to mapOf("userId" to uid, "teamId" to 1, "orderId" to 1, "teamPoint" to 1, "aggrDate" to playDate)
-        )
+        if (team.isNullOrEmpty())
+            mapOf("userId" to uid, "teamId" to 0)
+        else
+            // TODO: true team implementation
+            mapOf(
+                "userId" to uid, "teamId" to 1, "teamRank" to 1, "teamName" to team,
+                "userTeamPoint" to mapOf("userId" to uid, "teamId" to 1, "orderId" to 1, "teamPoint" to 1, "aggrDate" to playDate)
+            )
     }
 
     "GetUserRegion" {
@@ -313,7 +353,7 @@ fun ChusanController.chusanInit() {
         mapOf(
             "gameSetting" to mapOf(
                 "romVersion" to "$version.00",
-                "dataVersion" to versionHelper[data["clientId"].toString()],
+                "dataVersion" to (versionHelper.get(data["clientId"].toString()) ?: "$version.01"),
                 "isMaintenance" to false,
                 "requestInterval" to 0,
                 "rebootStartTime" to now.minusHours(4).format(fmt),
@@ -322,8 +362,6 @@ fun ChusanController.chusanInit() {
                 "maxCountCharacter" to 300,
                 "maxCountItem" to 300,
                 "maxCountMusic" to 300,
-//                "matchStartTime" to now.minusHours(1).format(fmt),
-//                "matchEndTime" to now.plusHours(7).format(fmt),
                 "matchStartTime" to now.withHour(0).withMinute(1).withSecond(0).format(fmt),
                 "matchEndTime" to now.withHour(23).withMinute(59).withSecond(0).format(fmt),
                 "matchTimeLimit" to 10,
