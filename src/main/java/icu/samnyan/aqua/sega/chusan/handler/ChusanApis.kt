@@ -232,7 +232,7 @@ fun ChusanController.chusanInit() {
             "playerLevel" to option?.playerLevel,
             "rating" to option?.rating,
             "headphone" to option?.headphone,
-            "chargeState" to 1, "userNameEx" to "", "banState" to 0,
+            "chargeState" to 1, "userNameEx" to "", "banState" to user.banState,
         ) + userDict
 
         if (user.card?.status == CardStatus.MIGRATED_TO_MINATO) {

@@ -167,5 +167,7 @@ class Chu3UserData : BaseEntity(), IUserData {
     var trophyIdSub1 = 0
     var trophyIdSub2 = 0
 
+    var banState = 0
+
     override val totalScore get() = totalHiScore
 }

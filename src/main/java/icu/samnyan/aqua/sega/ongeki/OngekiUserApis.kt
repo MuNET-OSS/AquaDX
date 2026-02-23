@@ -157,7 +157,7 @@ fun OngekiController.initUser() {
             "lastEmoneyBrand" to 4,
             "lastEmoneyCredit" to 10000,
 
-            "banStatus" to 0,
+            "banStatus" to u.banState,
             "isWarningConfirmed" to false,
         )
 

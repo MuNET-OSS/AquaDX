@@ -105,6 +105,8 @@ class UserData : IUserData {
     var sumMasterPlatinumScoreStar = 0
     var sumLunaticPlatinumScoreStar = 0
 
+    var banState = 0
+
     override val totalScore get() = sumTechHighScore
 }
 
