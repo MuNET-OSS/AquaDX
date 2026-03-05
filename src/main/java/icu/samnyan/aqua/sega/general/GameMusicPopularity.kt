@@ -24,7 +24,7 @@ class GameMusicPopularity(val em: EntityManager) {
         // Get the play count of each music in the last N days
         val after = LocalDate.now().minusDays(LOOK_BACK_DAYS).isoDate()
 
-        ranking = ls("maimai2", "chusan", "ongeki", "wacca").associateWith { game ->
+        ranking = ls("chusan", "ongeki").associateWith { game ->
             em.createNativeQuery("""
                 SELECT music_id, count(user_id) as count 
                 FROM ${game}_user_playlog_view

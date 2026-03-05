@@ -37,7 +37,10 @@ fun OngekiController.ongekiInit() {
     "GetGameRanking" {
         // type 1: Music current ranking, 2: Music past ranking
         val type = parsing { data["type"]!!.int }
-        empty.staticLst("gameRankingList") + mapOf("type" to type)
+        val lst = if (type == 1) (pop.ranking["ongeki"] ?: listOf()).map {
+            mapOf("id" to it.musicId, "point" to it.weight)
+        } else empty
+        lst.staticLst("gameRankingList") + mapOf("type" to type)
     }
 
     "GetGameSetting" {
