@@ -328,8 +328,8 @@ fun OngekiController.cmApiInit() {
     }
 
     "CMUpsertUserPrint" api@ {
-        // User print information, useless
-        null
+        val serialId = (1..20).map { (0..9).random() }.joinToString("")
+        mapOf("returnCode" to 1, "orderId" to 0, "serialId" to serialId, "apiName" to "cmUpsertUserPrint")
     }
 
     "CMUpsertUserPrintlog" api@ {
