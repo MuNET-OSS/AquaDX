@@ -6,12 +6,8 @@ import icu.samnyan.aqua.net.db.AquaUserServices
 import icu.samnyan.aqua.net.utils.SUCCESS
 import icu.samnyan.aqua.sega.general.model.Card
 import icu.samnyan.aqua.sega.general.service.CardService
-import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.ReentrantLock
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
 
@@ -41,80 +37,6 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     @API("recent")
     suspend fun recent(@RP username: String): List<IGenericGamePlaylog> = us.cardByName(username) { card ->
         playlogRepo.findByUserCardExtId(card.extId)
-    }
-
-    // List<Pair<should_hide, player>>>
-    private var rankingCache: List<Pair<Bool, GenericRankingPlayer>> = emptyList()
-    private var rankingCacheLock = ReentrantLock()
-    // Sorted index List<Rating> = Rank
-    private var rankingSortedIndex: List<Int> = emptyList()
-    private val pageSize = 100
-
-    @API("ranking")
-    fun ranking(@RP token: String?, @RP page: Int?): List<GenericRankingPlayer> {
-        val time = millis()
-
-        // Check cache validity
-        if (rankingCache.isEmpty()) (500 - "Ranking is computing... please wait")
-
-        val reqUser = token?.let { us.jwt.auth(it) }?.let { u ->
-            // Optimization: If the user is not banned, we don't need to process user information
-            if (!u.ghostCard.rankingBanned && !u.cards.any { it.rankingBanned } && u.ghostCard.status.isNormal) null
-            else u
-        }
-
-        // Read from cache if we just computed it less than duration ago
-        // Shadow-ban: Do not show banned cards in the ranking except for the user who owns the card
-        val v = rankingCache.filter { !it.l || it.r.username == reqUser?.username }
-            .mapIndexed { i, it -> it.r.apply { rank = i + 1 } }
-            .also { logger.info("Ranking returned in ${millis() - time}ms") }
-
-        return page?.let {
-            if (it < 0) (400 - "Invalid page number")
-            v.drop(it * pageSize).take(pageSize)
-        } ?: v
-    }
-
-    // Every 20 minutes
-    @Scheduled(fixedRate = 20, timeUnit = TimeUnit.MINUTES, initialDelay = 0)
-    fun rankingCacheRun() = rankingCacheLock.maybeLock { rankingCacheCompute() }
-
-    private val tableName = when (name) { "mai2" -> "maimai2"; "chu3" -> "chusan"; else -> name }
-    fun rankingCacheCompute() {
-        val time = millis()
-        rankingCache = us.em.createNativeQuery(
-            """
-                SELECT
-                    c.id,
-                    u.user_name,
-                    u.player_rating,
-                    u.last_play_date,
-                    AVG(p.achievement) / 10000.0 AS acc,
-                    SUM(p.is_full_combo) AS fc,
-                    SUM(p.is_all_perfect) AS ap,
-                    c.ranking_banned or a.opt_out_of_leaderboard or c.status = 12 AS hide,
-                    a.username
-                FROM ${tableName}_user_playlog_view p
-                     JOIN ${tableName}_user_data_view u ON p.user_id = u.id
-                     JOIN sega_card c ON u.aime_card_id = c.id
-                     LEFT JOIN aqua_net_user a ON c.net_user_id = a.au_id
-                GROUP BY p.user_id, u.player_rating
-                ORDER BY u.player_rating DESC;
-            """
-        ).exec.mapIndexed { i, it ->
-            it[7].truthy to GenericRankingPlayer(
-                rank = i + 1,
-                name = it[1].toString(),
-                rating = it[2]!!.int,
-                lastSeen = it[3].toString(),
-                accuracy = it[4]!!.double,
-                fullCombo = it[5]!!.int,
-                allPerfect = it[6]!!.int,
-                username = it[8]?.toString() ?: "user${it[0]}"
-            )
-        }
-        rankingSortedIndex = rankingCache.filter { !it.l }.map { it.r.rating }.reversed()
-        logger.info("Ranking for $name computed in ${millis() - time}ms")
     }
 
     @API("playlog")
@@ -177,10 +99,8 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
             }
         }
 
-        // Find serverRank by binary-searching in the rankingSortedIndex to find the minimal index that
-        // is greater than or equal to the user's rating
-        var serverRank = rankingSortedIndex.binarySearch(user.playerRating).let { if (it < 0) -it - 1 else it + 1 }
-        serverRank = rankingSortedIndex.size - serverRank
+        // Server rank is now computed by Minato.Net's RankingService
+        val serverRank = userDataRepo.findAllNonBanned().count { it.playerRating > user.playerRating }.long
 
         return GenericGameSummary(
             name = user.userName,
@@ -212,6 +132,7 @@ abstract class GameApiController<T : IUserData>(val name: String, userDataClass:
     @Autowired lateinit var botProps: BotProps
     // Map<userId, List<musicId>>
     var recommendedMusic: Map<Long, List<Int>> = emptyMap()
+    private val tableName = when (name) { "mai2" -> "maimai2"; "chu3" -> "chusan"; else -> name }
 
     @API("recommender-fetch")
     fun recommenderFetchPlays(@RP botSecret: String) = run {
