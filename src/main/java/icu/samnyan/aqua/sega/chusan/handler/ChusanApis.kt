@@ -333,12 +333,8 @@ fun ChusanController.chusanInit() {
 
         // Set the matching & reflector to the one set in the game options, or the external matching server
         val opts = TokenChecker.getCurrentSession()?.user?.gameOptions
-        val matching = opts?.chusanMatchingServer?.some ?:
-            props.externalMatching?.some ?:
-            (req.getHeader("wrapper original url") ?: req.requestURL.toString())
-                .removeSuffix("GetGameSettingApi").removeSuffix("ChuniServlet/")
-        val reflector = opts?.chusanMatchingReflector?.some ?:
-            props.reflectorUrl
+        val matching = "https://chu3-match.sega.ink/"
+        val reflector = "http://reflector.naominet.live:18080/"
 
         mapOf(
             "gameSetting" to mapOf(
@@ -356,10 +352,10 @@ fun ChusanController.chusanInit() {
                 "matchEndTime" to now.withHour(23).withMinute(59).withSecond(0).format(fmt),
                 "matchTimeLimit" to 10,
                 "matchErrorLimit" to 10,
-                "matchingUri" to matching.ensureEndingSlash(),
-                "matchingUriX" to matching.ensureEndingSlash(),
-                "udpHolePunchUri" to reflector?.ensureEndingSlash(),
-                "reflectorUri" to reflector?.ensureEndingSlash(),
+                "matchingUri" to matching,
+                "matchingUriX" to matching,
+                "udpHolePunchUri" to reflector,
+                "reflectorUri" to reflector,
             ),
             "isDumpUpload" to false,
             "isAou" to false
