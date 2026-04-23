@@ -8,5 +8,5 @@ import jakarta.persistence.Converter
 class IntegerListConverter : AttributeConverter<List<Int>, String> {
     override fun convertToDatabaseColumn(lst: List<Int>?) = lst?.joinToString(";") ?: ""
     override fun convertToEntityAttribute(str: String?) = if (str.isNullOrBlank()) ls() else
-        str.split(';').map { it.toInt() }
+        str.split(';', ',').filter { it.isNotBlank() }.map { it.toInt() }
 }

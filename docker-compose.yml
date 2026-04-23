@@ -1,10 +1,9 @@
 services:
   app:
-    image: gitea.c5y.moe/clansty/aquadx-minato:latest
+    image: registry.cn-hangzhou.aliyuncs.com/clansty/aquadx-minato:latest
     ports:
       - "83:83"
     volumes:
       - ./config/application.properties:/app/config/application.properties:ro
-      - ./config/GameSetting.json:/app/GameSetting.json:ro
       - ./data:/app/data
 
